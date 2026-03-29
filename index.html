@@ -780,14 +780,33 @@ function copyIP(type) {
   var box = document.getElementById(type === 'java' ? 'ipBoxJava' : 'ipBoxBedrock');
   var hint = document.getElementById(type === 'java' ? 'copyHintJava' : 'copyHintBedrock');
   var originalText = hint.textContent;
-  navigator.clipboard.writeText(ip).then(function() {
+
+  function onCopied() {
     box.classList.add('copied');
     hint.textContent = 'COPIED!';
     setTimeout(function() {
       box.classList.remove('copied');
       hint.textContent = originalText;
     }, 2000);
-  });
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(ip).then(onCopied).catch(fallback);
+  } else {
+    fallback();
+  }
+
+  function fallback() {
+    var textarea = document.createElement('textarea');
+    textarea.value = ip;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    onCopied();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
