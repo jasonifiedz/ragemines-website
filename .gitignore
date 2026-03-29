@@ -7,3 +7,4 @@ Thumbs.db
 .idea/
 node_modules/
 project.mobirise
+parse_trades.py
