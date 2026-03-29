@@ -122,21 +122,6 @@
       border-color: var(--rage-crimson);
       box-shadow: 0 0 10px rgba(231,76,60,0.2);
     }
-    .filter-select {
-      background: rgba(40,15,15,0.8);
-      border: 1px solid rgba(192,57,43,0.3);
-      color: #eee;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-family: 'Jost', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-      cursor: pointer;
-      min-width: 160px;
-      transition: border-color 0.2s;
-    }
-    .filter-select:focus { border-color: var(--rage-crimson); }
-    .filter-select option { background: #1a0a0a; color: #eee; }
     .trade-count {
       color: #666;
       font-size: 0.85rem;
@@ -216,21 +201,6 @@
       color: #888;
       font-size: 0.8rem;
     }
-    .item-enchants {
-      color: #a78bfa;
-      font-size: 0.78rem;
-      margin-top: 2px;
-    }
-    .item-lore {
-      color: #666;
-      font-size: 0.75rem;
-      font-style: italic;
-      margin-top: 2px;
-    }
-    .item-id {
-      color: #555;
-      font-size: 0.7rem;
-    }
     .cost-separator {
       color: #555;
       margin: 4px 0;
@@ -272,7 +242,7 @@
       .navbar-links { gap: 12px; }
       .page-header h1 { font-size: 1.8rem; }
       .filters { flex-direction: column; }
-      .filter-input, .filter-select { width: 100%; }
+      .filter-input { width: 100%; }
       td, th { padding: 8px 10px; font-size: 0.8rem; }
     }
   </style>
@@ -298,13 +268,7 @@
 </div>
 
 <div class="filters">
-  <input type="text" class="filter-input" id="searchInput" placeholder="Search items, enchants, shops...">
-  <select class="filter-select" id="shopFilter">
-    <option value="">All Shops</option>
-  </select>
-  <select class="filter-select" id="itemFilter">
-    <option value="">All Item Types</option>
-  </select>
+  <input type="text" class="filter-input" id="searchInput" placeholder="Search items or shops...">
 </div>
 <div class="trade-count" id="tradeCount"></div>
 
@@ -334,54 +298,15 @@
   var trades = TRADES_DATA;
   var tbody = document.getElementById('tradesBody');
   var searchInput = document.getElementById('searchInput');
-  var shopFilter = document.getElementById('shopFilter');
-  var itemFilter = document.getElementById('itemFilter');
   var tradeCount = document.getElementById('tradeCount');
   var noResults = document.getElementById('noResults');
   var sortCol = 'shop';
   var sortAsc = true;
 
-  // Populate shop filter
-  var shops = [];
-  var itemTypes = {};
-  trades.forEach(function(t) {
-    if (shops.indexOf(t.shop) === -1) shops.push(t.shop);
-    var rtype = t.result.id;
-    if (!itemTypes[rtype]) itemTypes[rtype] = t.result.name;
-    if (t.cost1) { var ctype = t.cost1.id; if (!itemTypes[ctype]) itemTypes[ctype] = t.cost1.name; }
-    if (t.cost2) { var ctype2 = t.cost2.id; if (!itemTypes[ctype2]) itemTypes[ctype2] = t.cost2.name; }
-  });
-  shops.sort();
-  shops.forEach(function(s) {
-    var opt = document.createElement('option');
-    opt.value = s;
-    opt.textContent = s;
-    shopFilter.appendChild(opt);
-  });
-
-  // Populate item type filter with unique base item types
-  var itemTypeEntries = Object.entries(itemTypes).sort(function(a, b) {
-    return a[1].localeCompare(b[1]);
-  });
-  // Deduplicate by display name
-  var seenNames = {};
-  itemTypeEntries.forEach(function(entry) {
-    var displayName = entry[1];
-    if (seenNames[displayName]) return;
-    seenNames[displayName] = true;
-    var opt = document.createElement('option');
-    opt.value = entry[0];
-    opt.textContent = displayName;
-    itemFilter.appendChild(opt);
-  });
-
   function renderItem(item) {
     if (!item) return '';
     var html = '<span class="item-name">' + escHtml(item.name) + '</span>';
     if (item.count > 1) html += ' <span class="item-count">x' + item.count + '</span>';
-    html += '<br><span class="item-id">' + escHtml(item.id) + '</span>';
-    if (item.enchantments) html += '<div class="item-enchants">' + escHtml(item.enchantments) + '</div>';
-    if (item.lore && item.lore.length > 0) html += '<div class="item-lore">' + escHtml(item.lore.join(', ')) + '</div>';
     return html;
   }
 
@@ -402,36 +327,18 @@
   function matchesSearch(trade, query) {
     if (!query) return true;
     var q = query.toLowerCase();
-    var searchable = [
-      trade.shop, trade.result.name, trade.result.id, trade.result.enchantments,
-      trade.cost1.name, trade.cost1.id, trade.cost1.enchantments
-    ];
-    if (trade.cost2) {
-      searchable.push(trade.cost2.name, trade.cost2.id, trade.cost2.enchantments);
-    }
-    if (trade.result.lore) searchable = searchable.concat(trade.result.lore);
-    if (trade.cost1.lore) searchable = searchable.concat(trade.cost1.lore);
+    var searchable = [trade.shop, trade.result.name, trade.cost1.name];
+    if (trade.cost2) searchable.push(trade.cost2.name);
     return searchable.join(' ').toLowerCase().indexOf(q) !== -1;
-  }
-
-  function matchesItemType(trade, itemId) {
-    if (!itemId) return true;
-    return trade.result.id === itemId || trade.cost1.id === itemId || (trade.cost2 && trade.cost2.id === itemId);
   }
 
   function getFilteredTrades() {
     var query = searchInput.value;
-    var shop = shopFilter.value;
-    var itemId = itemFilter.value;
 
     var filtered = trades.filter(function(t) {
-      if (shop && t.shop !== shop) return false;
-      if (!matchesSearch(t, query)) return false;
-      if (!matchesItemType(t, itemId)) return false;
-      return true;
+      return matchesSearch(t, query);
     });
 
-    // Sort
     filtered.sort(function(a, b) {
       var va, vb;
       if (sortCol === 'shop') { va = a.shop; vb = b.shop; }
@@ -480,8 +387,6 @@
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(render, 200);
   });
-  shopFilter.addEventListener('change', render);
-  itemFilter.addEventListener('change', render);
 
   // Sorting
   document.querySelectorAll('thead th[data-sort]').forEach(function(th) {
