@@ -561,6 +561,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
           <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="#features-section">Features</a></li>
+          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="trades.html">Trades</a></li>
           <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="#gallery-section">Gallery</a></li>
         </ul>
         <div class="navbar-buttons mbr-section-btn" style="display: flex; gap: 10px;">
@@ -740,7 +741,7 @@
     <div class="row justify-content-center">
       <div class="col-md-12 col-lg-6 my-auto px-4 align-left">
         <p class="mbr-text mb-0 mbr-fonts-style display-7" style="color: #888;">
-          &copy; 2026 <strong style="color: var(--rage-crimson);">RageMines</strong>. All rights reserved.
+          &copy; 2026 <strong style="color: var(--rage-crimson);">RageMines</strong>. All rights reserved. We do not have affiliation with any real world brands.
         </p>
       </div>
       <div class="col-md-12 col-lg-6 px-4 align-right">
@@ -781,32 +782,14 @@ function copyIP(type) {
   var hint = document.getElementById(type === 'java' ? 'copyHintJava' : 'copyHintBedrock');
   var originalText = hint.textContent;
 
-  function onCopied() {
+  navigator.clipboard.writeText(ip).then(function() {
     box.classList.add('copied');
     hint.textContent = 'COPIED!';
     setTimeout(function() {
       box.classList.remove('copied');
       hint.textContent = originalText;
     }, 2000);
-  }
-
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(ip).then(onCopied).catch(fallback);
-  } else {
-    fallback();
-  }
-
-  function fallback() {
-    var textarea = document.createElement('textarea');
-    textarea.value = ip;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    onCopied();
-  }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {

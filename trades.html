@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="assets/images/server/server-icon.png" type="image/x-icon">
+  <meta name="description" content="RageMines Shopkeeper Trades - Browse all trades available on the server.">
+  <title>Trades - RageMines</title>
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/socicon/css/styles.css">
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700&display=swap"></noscript>
+  <style>
+    :root {
+      --rage-red: #c0392b;
+      --rage-dark-red: #922b21;
+      --rage-crimson: #e74c3c;
+      --rage-dark: #1a0a0a;
+      --rage-darker: #0d0505;
+      --rage-glow: #ff4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--rage-darker);
+      color: #ccc;
+      font-family: 'Jost', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: linear-gradient(180deg, rgba(26,10,10,0.95) 0%, rgba(26,10,10,0.85) 100%);
+      border-bottom: 2px solid var(--rage-red);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .navbar-brand img { height: 40px; }
+    .navbar-brand span {
+      font-family: 'Fredoka One', display;
+      font-size: 1.3rem;
+      color: var(--rage-crimson);
+    }
+    .navbar-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .navbar-links a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .navbar-links a:hover { color: var(--rage-crimson); }
+    .btn-store {
+      background: var(--rage-red);
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-store:hover { background: var(--rage-crimson); color: #fff; }
+
+    /* Page header */
+    .page-header {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+    .page-header h1 {
+      font-family: 'Fredoka One', display;
+      font-size: 2.5rem;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(192,57,43,0.3);
+    }
+    .page-header h1 span { color: var(--rage-crimson); }
+    .page-header p { color: #888; margin-top: 8px; }
+
+    /* Filters */
+    .filters {
+      max-width: 1200px;
+      margin: 0 auto 20px;
+      padding: 0 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filter-input {
+      flex: 1;
+      min-width: 200px;
+      background: rgba(40,15,15,0.8);
+      border: 1px solid rgba(192,57,43,0.3);
+      color: #eee;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .filter-input:focus {
+      border-color: var(--rage-crimson);
+      box-shadow: 0 0 10px rgba(231,76,60,0.2);
+    }
+    .filter-select {
+      background: rgba(40,15,15,0.8);
+      border: 1px solid rgba(192,57,43,0.3);
+      color: #eee;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      min-width: 160px;
+      transition: border-color 0.2s;
+    }
+    .filter-select:focus { border-color: var(--rage-crimson); }
+    .filter-select option { background: #1a0a0a; color: #eee; }
+    .trade-count {
+      color: #666;
+      font-size: 0.85rem;
+      padding: 0 20px;
+      max-width: 1200px;
+      margin: 0 auto 10px;
+    }
+
+    /* Table */
+    .table-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: rgba(26,10,10,0.6);
+      border: 1px solid rgba(192,57,43,0.2);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    thead th {
+      background: rgba(192,57,43,0.15);
+      color: #fff;
+      font-weight: 600;
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 2px solid rgba(192,57,43,0.3);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    thead th:hover {
+      background: rgba(192,57,43,0.25);
+    }
+    thead th .sort-arrow {
+      margin-left: 6px;
+      opacity: 0.4;
+      font-size: 0.75rem;
+    }
+    thead th.sorted .sort-arrow { opacity: 1; color: var(--rage-crimson); }
+    tbody tr {
+      transition: background 0.15s;
+    }
+    tbody tr:hover {
+      background: rgba(192,57,43,0.08);
+    }
+    tbody tr:not(:last-child) td {
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    td {
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+    .shop-badge {
+      background: rgba(192,57,43,0.15);
+      color: var(--rage-crimson);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .item-name {
+      color: #fff;
+      font-weight: 500;
+    }
+    .item-count {
+      color: #888;
+      font-size: 0.8rem;
+    }
+    .item-enchants {
+      color: #a78bfa;
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+    .item-lore {
+      color: #666;
+      font-size: 0.75rem;
+      font-style: italic;
+      margin-top: 2px;
+    }
+    .item-id {
+      color: #555;
+      font-size: 0.7rem;
+    }
+    .cost-separator {
+      color: #555;
+      margin: 4px 0;
+      font-size: 0.75rem;
+    }
+    .arrow-cell {
+      color: var(--rage-crimson);
+      font-size: 1.3rem;
+      text-align: center;
+      width: 40px;
+    }
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: #555;
+      font-size: 1.1rem;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid rgba(192,57,43,0.2);
+      padding: 20px;
+      text-align: center;
+      color: #555;
+      font-size: 0.85rem;
+    }
+    .footer a { color: var(--rage-crimson); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--rage-darker); }
+    ::-webkit-scrollbar-thumb { background: var(--rage-dark-red); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--rage-crimson); }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .navbar { padding: 10px 16px; }
+      .navbar-links { gap: 12px; }
+      .page-header h1 { font-size: 1.8rem; }
+      .filters { flex-direction: column; }
+      .filter-input, .filter-select { width: 100%; }
+      td, th { padding: 8px 10px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="navbar-brand">
+    <img src="assets/images/server/server-icon.png" alt="RageMines">
+    <span>RageMines</span>
+  </a>
+  <div class="navbar-links">
+    <a href="index.html">Home</a>
+    <a href="trades.html" style="color: var(--rage-crimson);">Trades</a>
+    <a href="https://store.ragemines.com" target="_blank" class="btn-store">Store</a>
+    <a href="https://discord.gg/RageMines" target="_blank" class="btn-store" style="background: #5865F2;">Discord</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Shopkeeper <span>Trades</span></h1>
+  <p>Browse all trades available from shopkeepers on the server.</p>
+</div>
+
+<div class="filters">
+  <input type="text" class="filter-input" id="searchInput" placeholder="Search items, enchants, shops...">
+  <select class="filter-select" id="shopFilter">
+    <option value="">All Shops</option>
+  </select>
+  <select class="filter-select" id="itemFilter">
+    <option value="">All Item Types</option>
+  </select>
+</div>
+<div class="trade-count" id="tradeCount"></div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th data-sort="shop">Shop <span class="sort-arrow">&#9650;</span></th>
+        <th data-sort="cost">Cost <span class="sort-arrow">&#9650;</span></th>
+        <th class="arrow-cell"></th>
+        <th data-sort="result">Result <span class="sort-arrow">&#9650;</span></th>
+      </tr>
+    </thead>
+    <tbody id="tradesBody">
+    </tbody>
+  </table>
+  <div class="no-results" id="noResults" style="display:none;">No trades found matching your filters.</div>
+</div>
+
+<div class="footer">
+  &copy; 2026 <a href="index.html">RageMines</a>. All rights reserved. We do not have affiliation with any real world brands.
+</div>
+
+<script src="trades-data.js"></script>
+<script>
+(function() {
+  var trades = TRADES_DATA;
+  var tbody = document.getElementById('tradesBody');
+  var searchInput = document.getElementById('searchInput');
+  var shopFilter = document.getElementById('shopFilter');
+  var itemFilter = document.getElementById('itemFilter');
+  var tradeCount = document.getElementById('tradeCount');
+  var noResults = document.getElementById('noResults');
+  var sortCol = 'shop';
+  var sortAsc = true;
+
+  // Populate shop filter
+  var shops = [];
+  var itemTypes = {};
+  trades.forEach(function(t) {
+    if (shops.indexOf(t.shop) === -1) shops.push(t.shop);
+    var rtype = t.result.id;
+    if (!itemTypes[rtype]) itemTypes[rtype] = t.result.name;
+    if (t.cost1) { var ctype = t.cost1.id; if (!itemTypes[ctype]) itemTypes[ctype] = t.cost1.name; }
+    if (t.cost2) { var ctype2 = t.cost2.id; if (!itemTypes[ctype2]) itemTypes[ctype2] = t.cost2.name; }
+  });
+  shops.sort();
+  shops.forEach(function(s) {
+    var opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    shopFilter.appendChild(opt);
+  });
+
+  // Populate item type filter with unique base item types
+  var itemTypeEntries = Object.entries(itemTypes).sort(function(a, b) {
+    return a[1].localeCompare(b[1]);
+  });
+  // Deduplicate by display name
+  var seenNames = {};
+  itemTypeEntries.forEach(function(entry) {
+    var displayName = entry[1];
+    if (seenNames[displayName]) return;
+    seenNames[displayName] = true;
+    var opt = document.createElement('option');
+    opt.value = entry[0];
+    opt.textContent = displayName;
+    itemFilter.appendChild(opt);
+  });
+
+  function renderItem(item) {
+    if (!item) return '';
+    var html = '<span class="item-name">' + escHtml(item.name) + '</span>';
+    if (item.count > 1) html += ' <span class="item-count">x' + item.count + '</span>';
+    html += '<br><span class="item-id">' + escHtml(item.id) + '</span>';
+    if (item.enchantments) html += '<div class="item-enchants">' + escHtml(item.enchantments) + '</div>';
+    if (item.lore && item.lore.length > 0) html += '<div class="item-lore">' + escHtml(item.lore.join(', ')) + '</div>';
+    return html;
+  }
+
+  function renderCost(trade) {
+    var html = renderItem(trade.cost1);
+    if (trade.cost2) {
+      html += '<div class="cost-separator">+</div>' + renderItem(trade.cost2);
+    }
+    return html;
+  }
+
+  function escHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function matchesSearch(trade, query) {
+    if (!query) return true;
+    var q = query.toLowerCase();
+    var searchable = [
+      trade.shop, trade.result.name, trade.result.id, trade.result.enchantments,
+      trade.cost1.name, trade.cost1.id, trade.cost1.enchantments
+    ];
+    if (trade.cost2) {
+      searchable.push(trade.cost2.name, trade.cost2.id, trade.cost2.enchantments);
+    }
+    if (trade.result.lore) searchable = searchable.concat(trade.result.lore);
+    if (trade.cost1.lore) searchable = searchable.concat(trade.cost1.lore);
+    return searchable.join(' ').toLowerCase().indexOf(q) !== -1;
+  }
+
+  function matchesItemType(trade, itemId) {
+    if (!itemId) return true;
+    return trade.result.id === itemId || trade.cost1.id === itemId || (trade.cost2 && trade.cost2.id === itemId);
+  }
+
+  function getFilteredTrades() {
+    var query = searchInput.value;
+    var shop = shopFilter.value;
+    var itemId = itemFilter.value;
+
+    var filtered = trades.filter(function(t) {
+      if (shop && t.shop !== shop) return false;
+      if (!matchesSearch(t, query)) return false;
+      if (!matchesItemType(t, itemId)) return false;
+      return true;
+    });
+
+    // Sort
+    filtered.sort(function(a, b) {
+      var va, vb;
+      if (sortCol === 'shop') { va = a.shop; vb = b.shop; }
+      else if (sortCol === 'result') { va = a.result.name; vb = b.result.name; }
+      else if (sortCol === 'cost') { va = a.cost1.name; vb = b.cost1.name; }
+      else { va = a.shop; vb = b.shop; }
+      var cmp = va.toLowerCase().localeCompare(vb.toLowerCase());
+      return sortAsc ? cmp : -cmp;
+    });
+
+    return filtered;
+  }
+
+  function render() {
+    var filtered = getFilteredTrades();
+    tradeCount.textContent = 'Showing ' + filtered.length + ' of ' + trades.length + ' trades';
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '';
+      noResults.style.display = 'block';
+      return;
+    }
+    noResults.style.display = 'none';
+
+    // Render in chunks for performance
+    var html = '';
+    var limit = Math.min(filtered.length, 500);
+    for (var i = 0; i < limit; i++) {
+      var t = filtered[i];
+      html += '<tr>'
+        + '<td><span class="shop-badge">' + escHtml(t.shop) + '</span></td>'
+        + '<td>' + renderCost(t) + '</td>'
+        + '<td class="arrow-cell">&#10132;</td>'
+        + '<td>' + renderItem(t.result) + '</td>'
+        + '</tr>';
+    }
+    if (filtered.length > 500) {
+      html += '<tr><td colspan="4" style="text-align:center;color:#666;padding:20px;">Showing first 500 of ' + filtered.length + ' results. Use filters to narrow down.</td></tr>';
+    }
+    tbody.innerHTML = html;
+  }
+
+  // Event listeners
+  var debounceTimer;
+  searchInput.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(render, 200);
+  });
+  shopFilter.addEventListener('change', render);
+  itemFilter.addEventListener('change', render);
+
+  // Sorting
+  document.querySelectorAll('thead th[data-sort]').forEach(function(th) {
+    th.addEventListener('click', function() {
+      var col = th.getAttribute('data-sort');
+      if (sortCol === col) {
+        sortAsc = !sortAsc;
+      } else {
+        sortCol = col;
+        sortAsc = true;
+      }
+      // Update sort arrows
+      document.querySelectorAll('thead th').forEach(function(h) { h.classList.remove('sorted'); });
+      th.classList.add('sorted');
+      th.querySelector('.sort-arrow').innerHTML = sortAsc ? '&#9650;' : '&#9660;';
+      render();
+    });
+  });
+
+  // Initial render
+  render();
+})();
+</script>
+
+</body>
+</html>
