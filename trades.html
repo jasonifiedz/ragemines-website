@@ -174,15 +174,6 @@
       font-size: 0.9rem;
       vertical-align: middle;
     }
-    .shop-badge {
-      background: rgba(192,57,43,0.15);
-      color: var(--rage-crimson);
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
     .item-name {
       color: #fff;
       font-weight: 500;
@@ -294,7 +285,6 @@
   <table>
     <thead>
       <tr>
-        <th data-sort="shop">Shop <span class="sort-arrow">&#9650;</span></th>
         <th data-sort="cost">Cost <span class="sort-arrow">&#9650;</span></th>
         <th class="arrow-cell"></th>
         <th data-sort="result">Result <span class="sort-arrow">&#9650;</span></th>
@@ -387,14 +377,13 @@
     for (var i = 0; i < limit; i++) {
       var t = filtered[i];
       html += '<tr>'
-        + '<td><span class="shop-badge">' + escHtml(t.shop) + '</span></td>'
         + '<td>' + renderCost(t) + '</td>'
         + '<td class="arrow-cell">&#10132;</td>'
         + '<td>' + renderItem(t.result) + '</td>'
         + '</tr>';
     }
     if (filtered.length > 500) {
-      html += '<tr><td colspan="4" style="text-align:center;color:#666;padding:20px;">Showing first 500 of ' + filtered.length + ' results. Use filters to narrow down.</td></tr>';
+      html += '<tr><td colspan="3" style="text-align:center;color:#666;padding:20px;">Showing first 500 of ' + filtered.length + ' results. Use filters to narrow down.</td></tr>';
     }
     tbody.innerHTML = html;
   }
