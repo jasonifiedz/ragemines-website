@@ -217,13 +217,53 @@
     ::-webkit-scrollbar-thumb { background: var(--rage-dark-red); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--rage-crimson); }
 
+    .filter-select {
+      background: rgba(40,15,15,0.8);
+      border: 1px solid rgba(192,57,43,0.3);
+      color: #eee;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      cursor: pointer;
+      min-width: 160px;
+    }
+    .filter-select:focus {
+      border-color: var(--rage-crimson);
+      box-shadow: 0 0 10px rgba(231,76,60,0.2);
+    }
+    .filter-select option {
+      background: #1a0a0a;
+      color: #eee;
+    }
+    .world-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+    .world-overworld { background: rgba(76,175,80,0.2); color: #66bb6a; }
+    .world-cave { background: rgba(158,158,158,0.2); color: #bdbdbd; }
+    .world-sakura { background: rgba(233,30,99,0.2); color: #f48fb1; }
+    .world-iceworld { background: rgba(33,150,243,0.2); color: #64b5f6; }
+    .world-inferno { background: rgba(255,87,34,0.2); color: #ff8a65; }
+    .world-aether { background: rgba(255,235,59,0.2); color: #fff176; }
+    .world-oblivion { background: rgba(156,39,176,0.2); color: #ce93d8; }
+    .world-ocean { background: rgba(0,188,212,0.2); color: #4dd0e1; }
+    .world-general { background: rgba(255,255,255,0.1); color: #999; }
+
     /* Mobile */
     @media (max-width: 768px) {
       .navbar { padding: 10px 16px; }
       .navbar-links { gap: 12px; }
       .page-header h1 { font-size: 1.8rem; }
       .filters { flex-direction: column; }
-      .filter-input { width: 100%; }
+      .filter-input, .filter-select { width: 100%; }
       td, th { padding: 8px 10px; font-size: 0.8rem; }
     }
   </style>
@@ -277,7 +317,19 @@
 </div>
 
 <div class="filters">
-  <input type="text" class="filter-input" id="searchInput" placeholder="Search items or shops...">
+  <input type="text" class="filter-input" id="searchInput" placeholder="Search items...">
+  <select class="filter-select" id="worldFilter">
+    <option value="">All Worlds</option>
+    <option value="Overworld">Overworld</option>
+    <option value="Cave">Cave</option>
+    <option value="Sakura">Sakura</option>
+    <option value="Iceworld">Iceworld</option>
+    <option value="Inferno">Inferno</option>
+    <option value="Aether">Aether</option>
+    <option value="Oblivion">Oblivion</option>
+    <option value="Ocean">Ocean</option>
+    <option value="General">General</option>
+  </select>
 </div>
 <div class="trade-count" id="tradeCount"></div>
 
@@ -288,6 +340,7 @@
         <th data-sort="cost">Cost <span class="sort-arrow">&#9650;</span></th>
         <th class="arrow-cell"></th>
         <th data-sort="result">Result <span class="sort-arrow">&#9650;</span></th>
+        <th data-sort="world">World <span class="sort-arrow">&#9650;</span></th>
       </tr>
     </thead>
     <tbody id="tradesBody">
@@ -306,9 +359,10 @@
   var trades = TRADES_DATA;
   var tbody = document.getElementById('tradesBody');
   var searchInput = document.getElementById('searchInput');
+  var worldFilter = document.getElementById('worldFilter');
   var tradeCount = document.getElementById('tradeCount');
   var noResults = document.getElementById('noResults');
-  var sortCol = 'shop';
+  var sortCol = 'result';
   var sortAsc = true;
 
   function renderItem(item) {
@@ -335,24 +389,31 @@
   function matchesSearch(trade, query) {
     if (!query) return true;
     var q = query.toLowerCase();
-    var searchable = [trade.shop, trade.result.name, trade.cost1.name];
+    var searchable = [trade.shop, trade.result.name, trade.cost1.name, trade.world];
     if (trade.cost2) searchable.push(trade.cost2.name);
     return searchable.join(' ').toLowerCase().indexOf(q) !== -1;
   }
 
+  function renderWorldBadge(world) {
+    var cls = 'world-' + world.toLowerCase();
+    return '<span class="world-badge ' + cls + '">' + escHtml(world) + '</span>';
+  }
+
   function getFilteredTrades() {
     var query = searchInput.value;
+    var world = worldFilter.value;
 
     var filtered = trades.filter(function(t) {
+      if (world && t.world !== world) return false;
       return matchesSearch(t, query);
     });
 
     filtered.sort(function(a, b) {
       var va, vb;
-      if (sortCol === 'shop') { va = a.shop; vb = b.shop; }
-      else if (sortCol === 'result') { va = a.result.name; vb = b.result.name; }
+      if (sortCol === 'result') { va = a.result.name; vb = b.result.name; }
       else if (sortCol === 'cost') { va = a.cost1.name; vb = b.cost1.name; }
-      else { va = a.shop; vb = b.shop; }
+      else if (sortCol === 'world') { va = a.world; vb = b.world; }
+      else { va = a.result.name; vb = b.result.name; }
       var cmp = va.toLowerCase().localeCompare(vb.toLowerCase());
       return sortAsc ? cmp : -cmp;
     });
@@ -380,10 +441,11 @@
         + '<td>' + renderCost(t) + '</td>'
         + '<td class="arrow-cell">&#10132;</td>'
         + '<td>' + renderItem(t.result) + '</td>'
+        + '<td>' + renderWorldBadge(t.world) + '</td>'
         + '</tr>';
     }
     if (filtered.length > 500) {
-      html += '<tr><td colspan="3" style="text-align:center;color:#666;padding:20px;">Showing first 500 of ' + filtered.length + ' results. Use filters to narrow down.</td></tr>';
+      html += '<tr><td colspan="4" style="text-align:center;color:#666;padding:20px;">Showing first 500 of ' + filtered.length + ' results. Use filters to narrow down.</td></tr>';
     }
     tbody.innerHTML = html;
   }
@@ -394,6 +456,7 @@
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(render, 200);
   });
+  worldFilter.addEventListener('change', render);
 
   // Sorting
   document.querySelectorAll('thead th[data-sort]').forEach(function(th) {
