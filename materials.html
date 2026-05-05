@@ -332,6 +332,12 @@
     .gear-cell[data-type="sword"] .gico { color: #f87171; }
     .gear-cell[data-type="bow"]   .gico { color: #4ade80; }
     .gear-cell[data-type="tal"]   .gico { color: #c084fc; }
+    /* Clickable to exclude from total */
+    .gear-cell:not(.zero) { cursor: pointer; }
+    .gear-cell:not(.zero):hover { background: rgba(192,57,43,0.18); border-color: rgba(231,76,60,0.4); }
+    .gear-cell.gear-off { opacity: 0.35; background: rgba(0,0,0,0.25); }
+    .gear-cell.gear-off .gval { text-decoration: line-through; color: #777; }
+    .gear-cell.gear-off .gico { filter: grayscale(0.7); opacity: 0.4; }
 
     /* Focused single-gear view */
     .gear-focus {
@@ -741,6 +747,7 @@ const BIOMES = [
       {m:'Leg. Artifact – Rust',    armor:280, pick:84, sword:84, bow:70, tal:70, gt:1260, mpc:84, tc:672, special:true},
       {m:'Leg. Artifact – Relic',   armor:136, pick:48, sword:48, bow:34, tal:34, gt:604,  mpc:38, tc:304, special:true},
       {m:'Leg. Artifact – Flareon', armor:228, pick:81, sword:81, bow:57, tal:57, gt:1008, mpc:63, tc:504, special:true},
+      {m:'Leg. Artifact – Total',   armor:644, pick:213,sword:213,bow:161,tal:161,gt:2872, mpc:185,tc:1480,special:true},
       {m:'Worm Teeth',         armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:1024, mpc:128, tc:1024},
       {m:'Sting',              armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:1024, mpc:128, tc:1024},
       {m:'Golem Essence',      armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:32,   mpc:4,   tc:32},
@@ -864,6 +871,16 @@ BIOMES.forEach(b => {
       ${whHtml}
     `;
 
+    // Click a gear cell to toggle its inclusion in the card's total
+    card.querySelectorAll('.gear-cell').forEach(cell => {
+      if (cell.classList.contains('zero')) return;
+      cell.title = (cell.title || '') + ' — click to toggle';
+      cell.addEventListener('click', () => {
+        cell.classList.toggle('gear-off');
+        updateCardTotal(card);
+      });
+    });
+
     grid.appendChild(card);
   });
 
@@ -876,37 +893,44 @@ document.getElementById('sumShowing').textContent = TOTAL;
 
 let activeBiome = 'all', activeGear = 'all', searchQ = '', whCount = 1;
 
-function updateWHTotals() {
-  document.querySelectorAll('.mat-card').forEach(card => {
-    const mpc = parseFloat(card.dataset.mpc || 0);
-    const gearSum = parseFloat(card.dataset.gearSum || 0);
-
-    // World Head block (only present if mpc > 0)
-    if (mpc) {
-      const whTotal = mpc * whCount;
-      const whTotalEl = card.querySelector('[data-wh-total]');
-      const whStackEl = card.querySelector('[data-wh-stacks]');
-      if (whTotalEl) whTotalEl.textContent = fmtNum(whTotal);
-      if (whStackEl) whStackEl.textContent = stackStr(whTotal);
-      card.querySelectorAll('[data-wh-count-label]').forEach(el => { el.textContent = whCount; });
-
-      // Dedupe: when whCount===1, the "N heads" row repeats the per-head row.
-      // Also hide the stacks line if mpc < 64 (less than one stack — pointless).
-      const totalRow  = card.querySelector('[data-wh-total-row]');
-      const stacksRow = card.querySelector('[data-wh-stacks-row]');
-      if (totalRow)  totalRow.style.display  = whCount === 1 ? 'none' : '';
-      if (stacksRow) stacksRow.style.display = whTotal >= 64 ? '' : 'none';
-    }
-
-    // Bottom-line grand total: gear sum + (mpc × whCount)
-    const grandTotal = gearSum + mpc * whCount;
-    const totalValEl = card.querySelector('[data-total-val]');
-    const totalStackEl = card.querySelector('[data-total-stacks]');
-    const totalBigEl = card.querySelector('[data-total-big]');
-    if (totalValEl) totalValEl.textContent = fmtNum(grandTotal);
-    if (totalStackEl) totalStackEl.textContent = stackStr(grandTotal);
-    if (totalBigEl) totalBigEl.classList.toggle('big', grandTotal >= 500);
+function effectiveGearSum(card) {
+  let sum = 0;
+  card.querySelectorAll('.gear-cell').forEach(cell => {
+    if (cell.classList.contains('gear-off')) return;
+    sum += parseFloat(card.dataset[cell.dataset.type] || 0);
   });
+  return sum;
+}
+
+function updateCardTotal(card) {
+  const mpc = parseFloat(card.dataset.mpc || 0);
+  const gearSum = effectiveGearSum(card);
+
+  if (mpc) {
+    const whTotal = mpc * whCount;
+    const whTotalEl = card.querySelector('[data-wh-total]');
+    const whStackEl = card.querySelector('[data-wh-stacks]');
+    if (whTotalEl) whTotalEl.textContent = fmtNum(whTotal);
+    if (whStackEl) whStackEl.textContent = stackStr(whTotal);
+    card.querySelectorAll('[data-wh-count-label]').forEach(el => { el.textContent = whCount; });
+
+    const totalRow  = card.querySelector('[data-wh-total-row]');
+    const stacksRow = card.querySelector('[data-wh-stacks-row]');
+    if (totalRow)  totalRow.style.display  = whCount === 1 ? 'none' : '';
+    if (stacksRow) stacksRow.style.display = whTotal >= 64 ? '' : 'none';
+  }
+
+  const grandTotal = gearSum + mpc * whCount;
+  const totalValEl = card.querySelector('[data-total-val]');
+  const totalStackEl = card.querySelector('[data-total-stacks]');
+  const totalBigEl = card.querySelector('[data-total-big]');
+  if (totalValEl) totalValEl.textContent = fmtNum(grandTotal);
+  if (totalStackEl) totalStackEl.textContent = stackStr(grandTotal);
+  if (totalBigEl) totalBigEl.classList.toggle('big', grandTotal >= 500);
+}
+
+function updateWHTotals() {
+  document.querySelectorAll('.mat-card').forEach(updateCardTotal);
 }
 
 const whCountInput = document.getElementById('whCountInput');
