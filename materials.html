@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="description" content="RageMines Materials Guide — how many materials you need to craft a full set of gear, broken down by biome.">
+  <title>Materials Guide - RageMines</title>
+  <link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
+  <link rel="stylesheet" href="assets/web/assets/mobirise-icons/mobirise-icons.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
+  <link rel="stylesheet" href="assets/dropdown/css/style.css">
+  <link rel="stylesheet" href="assets/socicon/css/styles.css">
+  <link rel="stylesheet" href="assets/theme/css/style.css">
+  <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap"></noscript>
+  <link rel="preload" href="https://fonts.googleapis.com/css?family=Jost:100,200,300,400,500,600,700,800,900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:100,200,300,400,500,600,700,800,900&display=swap"></noscript>
+  <style>
+    :root {
+      --rage-red: #c0392b;
+      --rage-dark-red: #922b21;
+      --rage-crimson: #e74c3c;
+      --rage-dark: #1a0a0a;
+      --rage-darker: #0d0505;
+      --rage-glow: #ff4444;
+    }
+
+    html, body { background-color: var(--rage-darker); margin: 0; }
+    html { scrollbar-gutter: stable; }
+    section { background-color: transparent !important; }
+    body {
+      color: #ccc;
+      font-family: 'Jost', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* Navbar (matches site) */
+    .navbar {
+      background: linear-gradient(180deg, rgba(26,10,10,0.95) 0%, rgba(26,10,10,0.85) 100%) !important;
+      border-bottom: 2px solid var(--rage-red);
+      backdrop-filter: blur(10px);
+    }
+    .navbar .navbar-caption { color: var(--rage-crimson) !important; font-weight: bold !important; }
+    .navbar .nav-link { color: #ccc !important; transition: color 0.3s ease; }
+    .navbar .nav-link:hover { color: var(--rage-crimson) !important; }
+    .btn-primary, .btn-primary:active {
+      background-color: var(--rage-red) !important;
+      border-color: var(--rage-red) !important;
+      color: #fff !important;
+      box-shadow: 0 0 20px rgba(192, 57, 43, 0.4);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover, .btn-primary:focus {
+      background-color: var(--rage-crimson) !important;
+      border-color: var(--rage-crimson) !important;
+      box-shadow: 0 0 30px rgba(231, 76, 60, 0.6);
+    }
+
+    /* Page header */
+    .page-header { text-align: center; padding: 40px 20px 16px; }
+    .page-header h1 {
+      font-family: 'Fredoka One', display;
+      font-size: 2.5rem;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(192,57,43,0.3);
+      margin: 0;
+    }
+    .page-header h1 span { color: var(--rage-crimson); }
+    .page-header p { color: #aaa; margin: 10px auto 0; max-width: 620px; line-height: 1.55; }
+    .page-header p strong { color: #fff; }
+
+    /* Container */
+    .page-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    /* Summary strip */
+    .summary {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      justify-content: center;
+      margin: 8px 0 28px;
+    }
+    .summary-pill {
+      background: rgba(26,10,10,0.6);
+      border: 1px solid rgba(192,57,43,0.25);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      color: #aaa;
+      letter-spacing: 0.4px;
+    }
+    .summary-pill strong { color: #fff; font-weight: 600; margin-left: 4px; }
+    .summary-pill .count { color: var(--rage-crimson); font-family: 'Fredoka One', display; font-size: 0.95rem; margin-right: 4px; }
+
+    /* Controls */
+    .controls {
+      display: flex; gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 0 0 14px;
+    }
+    .search-wrap { position: relative; flex: 1 1 240px; max-width: 360px; }
+    .search-wrap svg {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: #777; pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(40,15,15,0.8);
+      border: 1px solid rgba(192,57,43,0.3);
+      color: #eee;
+      padding: 10px 14px 10px 38px;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--rage-crimson); box-shadow: 0 0 10px rgba(231,76,60,0.2); }
+    .search-input::placeholder { color: #777; }
+
+    /* WH count selector */
+    .wh-count-label {
+      color: #aaa;
+      font-size: 0.82rem;
+      letter-spacing: 0.4px;
+      font-weight: 500;
+    }
+    .wh-count-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .wh-count-btn {
+      background: rgba(40,15,15,0.7);
+      border: 1px solid rgba(251,191,36,0.25);
+      color: #bbb;
+      padding: 6px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      min-width: 42px;
+      font-variant-numeric: tabular-nums;
+    }
+    .wh-count-btn:hover { color: #fff; border-color: rgba(251,191,36,0.5); }
+    .wh-count-btn.active {
+      background: rgba(251,191,36,0.18);
+      border-color: rgba(251,191,36,0.65);
+      color: #fbbf24;
+      box-shadow: 0 0 12px rgba(251,191,36,0.18);
+    }
+    .wh-count-input {
+      background: rgba(40,15,15,0.7);
+      border: 1px solid rgba(251,191,36,0.25);
+      color: #eee;
+      padding: 6px 10px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      width: 86px;
+      outline: none;
+      transition: all 0.15s ease;
+      font-variant-numeric: tabular-nums;
+    }
+    .wh-count-input::placeholder { color: #777; font-weight: 400; }
+    .wh-count-input::-webkit-outer-spin-button,
+    .wh-count-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .wh-count-input { -moz-appearance: textfield; }
+    .wh-count-input:focus,
+    .wh-count-input.active {
+      border-color: rgba(251,191,36,0.65);
+      color: #fbbf24;
+      box-shadow: 0 0 12px rgba(251,191,36,0.18);
+    }
+
+    /* Gear filter pills */
+    .gear-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .gear-btn {
+      background: rgba(40,15,15,0.7);
+      border: 1px solid rgba(192,57,43,0.3);
+      color: #bbb;
+      padding: 8px 14px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      letter-spacing: 0.3px;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .gear-btn:hover { color: #fff; border-color: rgba(231,76,60,0.55); }
+    .gear-btn.active {
+      background: rgba(192,57,43,0.28);
+      border-color: var(--rage-crimson);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(231,76,60,0.25);
+    }
+
+    /* Biome tabs */
+    .biome-tabs {
+      display: flex; gap: 6px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(192,57,43,0.3);
+      padding: 0 0 12px;
+      margin: 18px 0 24px;
+    }
+    .biome-tab {
+      background: transparent;
+      border: 1px solid rgba(192,57,43,0.2);
+      color: #aaa;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex; align-items: center; gap: 6px;
+      letter-spacing: 0.3px;
+    }
+    .biome-tab:hover { color: #fff; border-color: rgba(231,76,60,0.5); }
+    .biome-tab.active {
+      background: rgba(192,57,43,0.28);
+      border-color: var(--rage-crimson);
+      color: #fff;
+    }
+
+    /* Biome section */
+    .biome-section {
+      margin-bottom: 38px;
+      animation: fadeUp 0.3s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .biome-section.hidden { display: none; }
+    .biome-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px;
+    }
+    .biome-emoji {
+      font-size: 1.4rem;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(192,57,43,0.12);
+      border: 1px solid rgba(192,57,43,0.3);
+      border-radius: 10px;
+    }
+    .biome-name {
+      font-family: 'Fredoka One', display;
+      color: var(--rage-crimson);
+      font-size: 1.2rem;
+      letter-spacing: 0.4px;
+    }
+    .biome-divider { flex: 1; height: 1px; background: rgba(192,57,43,0.18); }
+    .biome-count { color: #777; font-size: 0.78rem; letter-spacing: 0.4px; }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    /* Material card */
+    .mat-card {
+      background: rgba(26,10,10,0.6);
+      border: 1px solid rgba(192,57,43,0.2);
+      border-radius: 12px;
+      padding: 14px 16px 12px;
+      position: relative;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .mat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(231,76,60,0.55);
+      box-shadow: 0 8px 24px rgba(192,57,43,0.18);
+    }
+    .mat-card.row-hidden { display: none; }
+
+    .card-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 10px; margin-bottom: 10px;
+    }
+    .mat-name {
+      font-family: 'Fredoka One', display;
+      color: #fff;
+      font-size: 1rem;
+      line-height: 1.25;
+      letter-spacing: 0.2px;
+    }
+    .mat-name.special { color: #ddd; font-style: italic; font-family: 'Jost', sans-serif; font-weight: 600; }
+
+
+    /* Gear breakdown row (default state) */
+    .gear-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+    .gear-cell {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 2px;
+      padding: 6px 4px;
+      background: rgba(40,15,15,0.45);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .gear-cell .gico { font-size: 0.85rem; opacity: 0.7; }
+    .gear-cell .gval {
+      color: #eee;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .gear-cell.zero .gval { color: #555; }
+    .gear-cell.zero { opacity: 0.45; }
+    .gear-cell[data-type="armor"] .gico { color: #cbd5e1; }
+    .gear-cell[data-type="pick"]  .gico { color: #60a5fa; }
+    .gear-cell[data-type="sword"] .gico { color: #f87171; }
+    .gear-cell[data-type="bow"]   .gico { color: #4ade80; }
+    .gear-cell[data-type="tal"]   .gico { color: #c084fc; }
+
+    /* Focused single-gear view */
+    .gear-focus {
+      display: none;
+      background: linear-gradient(135deg, rgba(192,57,43,0.2) 0%, rgba(40,15,15,0.6) 100%);
+      border: 1px solid rgba(231,76,60,0.45);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .gear-focus .focus-row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 8px;
+    }
+    .gear-focus .focus-label {
+      color: #f7dcd6;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-weight: 600;
+    }
+    .gear-focus .focus-val {
+      font-family: 'Fredoka One', display;
+      color: #fff;
+      font-size: 1.4rem;
+      text-shadow: 0 0 14px rgba(231,76,60,0.4);
+    }
+    .gear-focus .focus-stacks {
+      color: #ccc;
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+    .gear-focus .focus-stacks strong { color: #fff; font-family: 'Fredoka One', display; font-weight: 400; font-size: 0.92rem; margin: 0 2px; }
+    .mat-card.focused .gear-row { display: none; }
+    .mat-card.focused .gear-focus { display: block; }
+    .mat-card.focused .total-line { display: none; }
+
+    /* Total + stacks line */
+    .total-line {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 8px;
+      padding-top: 9px;
+      border-top: 1px solid rgba(192,57,43,0.18);
+    }
+    .total-line .stacks {
+      color: #ccc;
+      font-size: 0.82rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .total-line .stacks strong { color: #fff; font-weight: 600; }
+    .total-line .total-val {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .total-line .total-val .raw-label {
+      color: #888;
+      font-weight: 400;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-right: 4px;
+    }
+    .total-line .total-val.big { color: #ffd0c8; text-shadow: 0 0 10px rgba(231,76,60,0.3); }
+
+    /* World Head info (always visible) */
+    .wh-block {
+      margin-top: 10px;
+      padding: 8px 10px;
+      background: rgba(251,191,36,0.05);
+      border: 1px solid rgba(251,191,36,0.16);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      color: #ddd;
+      line-height: 1.5;
+    }
+    .wh-block .wh-block-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.68rem;
+      color: #fbbf24;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      opacity: 0.85;
+    }
+    .wh-block .wh-row { display: flex; justify-content: space-between; gap: 8px; }
+    .wh-block .wh-row + .wh-row { margin-top: 2px; }
+    .wh-block .wh-row span:first-child { color: #aaa; }
+    .wh-block .wh-row strong { color: #fbbf24; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    /* Empty state */
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+      color: #777;
+      font-size: 1rem;
+    }
+    .no-results.visible { display: block; }
+
+    /* Info banner about World Heads */
+    .info-banner {
+      background: rgba(26,10,10,0.6);
+      border: 1px solid rgba(192,57,43,0.2);
+      border-left: 3px solid var(--rage-crimson);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 0 0 22px;
+      font-size: 0.88rem;
+      color: #bbb;
+      line-height: 1.55;
+    }
+    .info-banner strong { color: #fff; }
+    .info-banner .info-icon { color: var(--rage-crimson); margin-right: 6px; font-weight: 700; }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid rgba(192,57,43,0.2);
+      padding: 20px;
+      text-align: center;
+      color: #666;
+      font-size: 0.85rem;
+    }
+    .footer a { color: var(--rage-crimson); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--rage-darker); }
+    ::-webkit-scrollbar-thumb { background: var(--rage-dark-red); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--rage-crimson); }
+
+    /* Creator credit */
+    .creator-credit {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0 0;
+      padding: 7px 16px;
+      background: linear-gradient(135deg, rgba(192,57,43,0.18) 0%, rgba(26,10,10,0.7) 100%);
+      border: 1px solid rgba(231,76,60,0.4);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: #eee;
+    }
+    .creator-credit .credit-label {
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .creator-credit .credit-name code {
+      font-family: 'Jost', monospace;
+      color: var(--rage-crimson);
+      background: rgba(192,57,43,0.18);
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 768px) {
+      .page-header h1 { font-size: 1.8rem; }
+      .page-container { padding: 0 12px 40px; }
+      .card-grid { grid-template-columns: 1fr; }
+      .controls { gap: 8px; }
+      .gear-btn { padding: 7px 11px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<section data-bs-version="5.1" class="menu menu2 cid-tkbL8n4vab" once="menu" id="menu2-16">
+  <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+    <div class="container-fluid">
+      <div class="navbar-brand">
+        <span class="navbar-logo">
+          <a href="index.html">
+            <img src="assets/images/server/logo.png" alt="RageMines" style="height: 3rem;">
+          </a>
+        </span>
+        <span class="navbar-caption-wrap"><a class="navbar-caption text-white display-7" href="index.html">RageMines</a></span>
+      </div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
+          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#features-section">Features</a></li>
+          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="economy.html">Economy</a></li>
+          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="trades.html">Trades</a></li>
+          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="materials.html" style="color: var(--rage-crimson) !important;">Materials</a></li>
+          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#gallery-section">Gallery</a></li>
+        </ul>
+        <div class="navbar-buttons mbr-section-btn" style="display: flex; gap: 10px;">
+          <a class="btn btn-primary display-4" href="https://store.ragemines.com" target="_blank">
+            <span class="mobi-mbri mobi-mbri-shopping-basket mbr-iconfont mbr-iconfont-btn"></span>
+            Store
+          </a>
+          <a class="btn btn-primary display-4" href="https://discord.gg/RageMines" target="_blank">
+            <span class="socicon socicon-discord mbr-iconfont mbr-iconfont-btn" style="font-size: 1rem;"></span>
+            Discord
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</section>
+
+<!-- HEADER -->
+<div class="page-header">
+  <h1>Materials <span>Guide</span></h1>
+  <p>Everything you need to craft a <strong>full set of gear</strong> in RageMines, broken down by biome and gear type.</p>
+  <div class="creator-credit">
+    <span class="credit-label">made by</span>
+    <span class="credit-name"><code>@tigashacker</code> &amp; <code>@yuukinochan</code></span>
+  </div>
+</div>
+
+<div class="page-container">
+
+  <div class="summary">
+    <span class="summary-pill"><span class="count" id="sumTotal">—</span> materials</span>
+    <span class="summary-pill"><span class="count">9</span> biomes</span>
+    <span class="summary-pill">Showing<strong id="sumShowing">—</strong></span>
+  </div>
+
+  <div class="info-banner">
+    <span class="info-icon">ℹ</span>
+    <strong>Tip:</strong> Click a gear filter to focus on what you need for that piece. <strong>World Heads</strong> are the biome-specific player heads (Overworld / Sakura / Desert / Oblivion). Use the <strong>World Heads</strong> selector below to scale every card to how many heads you're crafting — both per-head and total stay visible.
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="searchInput" class="search-input" type="text" placeholder="Search materials…" autocomplete="off">
+    </div>
+    <div class="gear-filters" id="gearFilters">
+      <button class="gear-btn active" data-filter="all">All</button>
+      <button class="gear-btn" data-filter="armor">🛡 Armor</button>
+      <button class="gear-btn" data-filter="pick">⛏ Pick</button>
+      <button class="gear-btn" data-filter="sword">⚔ Sword</button>
+      <button class="gear-btn" data-filter="bow">🏹 Bow</button>
+      <button class="gear-btn" data-filter="tal">🔮 Talisman</button>
+    </div>
+  </div>
+
+  <div class="controls" style="margin-top: 8px;">
+    <span class="wh-count-label">🪵 World Heads:</span>
+    <div class="wh-count-pills" id="whCountPills">
+      <button class="wh-count-btn active" data-count="1">1</button>
+      <button class="wh-count-btn" data-count="4">4</button>
+      <button class="wh-count-btn" data-count="8">8</button>
+      <button class="wh-count-btn" data-count="16">16</button>
+      <button class="wh-count-btn" data-count="32">32</button>
+      <button class="wh-count-btn" data-count="64">64</button>
+      <input type="number" class="wh-count-input" id="whCountInput" min="1" max="9999" placeholder="custom" inputmode="numeric">
+    </div>
+  </div>
+
+  <div class="biome-tabs" id="biomeTabs"></div>
+  <div id="sections"></div>
+  <div id="noResults" class="no-results">No materials match your search.</div>
+</div>
+
+<div class="footer">
+  &copy; 2026 <a href="index.html">RageMines</a>. All rights reserved. We do not have affiliation with any real world brands.
+</div>
+
+<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/dropdown/js/navbar-dropdown.js"></script>
+<script src="assets/theme/js/script.js"></script>
+
+<script>
+const BIOMES = [
+  { id:'overworld', name:'Overworld', emoji:'🌿',
+    items:[
+      {m:'Oak Wood',     armor:64,  pick:12,  sword:32,   bow:32,  tal:32,  gt:684,   mpc:64,  tc:512},
+      {m:'Loam Soil',    armor:20,  pick:6,   sword:6,    bow:5,   tal:5,   gt:554,   mpc:64,  tc:512},
+      {m:'Peat',         armor:40,  pick:12,  sword:12,   bow:10,  tal:10,  gt:596,   mpc:64,  tc:512},
+      {m:'Dirt',         armor:144, pick:42,  sword:42,   bow:36,  tal:42,  gt:722,   mpc:52,  tc:416},
+      {m:'Ryegrass',     armor:192, pick:56,  sword:56,   bow:48,  tal:48,  gt:912,   mpc:64,  tc:512},
+      {m:'Lemongrass',   armor:192, pick:56,  sword:56,   bow:48,  tal:48,  gt:912,   mpc:64,  tc:512},
+      {m:'Oak Leaves',   armor:192, pick:56,  sword:56,   bow:48,  tal:48,  gt:912,   mpc:64,  tc:512},
+      {m:'Silvergrass',  armor:384, pick:160, sword:160,  bow:64,  tal:64,  gt:1344,  mpc:64,  tc:512},
+      {m:'Poppy',        armor:8,   pick:0,   sword:2,    bow:0,   tal:0,   gt:42,    mpc:4,   tc:32},
+    ]
+  },
+  { id:'cave', name:'Cave', emoji:'🪨',
+    items:[
+      {m:'Stone',        armor:12,  pick:3.5, sword:3.5,  bow:3,   tal:3,   gt:82,    mpc:8,   tc:64},
+      {m:'Moss',         armor:20,  pick:6,   sword:7,    bow:6,   tal:3,   gt:66,    mpc:3,   tc:24},
+      {m:'Coal',         armor:20,  pick:6,   sword:6,    bow:5,   tal:5,   gt:106,   mpc:8,   tc:64},
+      {m:'Iron',         armor:24,  pick:7,   sword:7,    bow:6,   tal:6,   gt:114,   mpc:8,   tc:64},
+      {m:'Dripstone',    armor:52,  pick:18,  sword:18,   bow:9,   tal:13,  gt:182,   mpc:9,   tc:72},
+      {m:'Gold',         armor:24,  pick:8,   sword:8,    bow:6,   tal:6,   gt:108,   mpc:7,   tc:56},
+      {m:'Emerald',      armor:28,  pick:9,   sword:9,    bow:7,   tal:7,   gt:116,   mpc:7,   tc:56},
+      {m:'Diamond',      armor:28,  pick:9,   sword:9,    bow:7,   tal:7,   gt:116,   mpc:7,   tc:56},
+      {m:'Amethyst',     armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:512,   mpc:64,  tc:512},
+      {m:'Warden Heart', armor:8,   pick:0,   sword:2,    bow:0,   tal:0,   gt:42,    mpc:4,   tc:32},
+    ]
+  },
+  { id:'sakura', name:'Sakura', emoji:'🌸',
+    items:[
+      {m:'Cherry Wood',   armor:40,  pick:14,  sword:12,   bow:10,  tal:10,  gt:182,   mpc:12,  tc:96},
+      {m:'Rose Stone',    armor:68,  pick:24,  sword:24,   bow:17,  tal:17,  gt:302,   mpc:19,  tc:152},
+      {m:'Cherry Leaves', armor:52,  pick:18,  sword:18,   bow:13,  tal:13,  gt:234,   mpc:15,  tc:120},
+      {m:'Bloom Clay',    armor:84,  pick:30,  sword:30,   bow:21,  tal:21,  gt:370,   mpc:23,  tc:184},
+      {m:'Cherry Sand',   armor:136, pick:48,  sword:48,   bow:34,  tal:34,  gt:588,   mpc:36,  tc:288},
+      {m:'Spirit Clay',   armor:52,  pick:18,  sword:18,   bow:13,  tal:13,  gt:234,   mpc:15,  tc:120},
+      {m:'Pink Petal',    armor:56,  pick:18,  sword:18,   bow:14,  tal:14,  gt:248,   mpc:16,  tc:128},
+      {m:'Kunai',         armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:768,   mpc:96,  tc:768},
+      {m:'Bamboo',        armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:32,    mpc:4,   tc:32},
+      {m:'Lovers Tear',   armor:4,   pick:0,   sword:1,    bow:0,   tal:0,   gt:13,    mpc:1,   tc:8},
+    ]
+  },
+  { id:'iceworld', name:'Iceworld', emoji:'❄️',
+    items:[
+      {m:'Snow',          armor:52,  pick:18,  sword:18,   bow:13,  tal:13,  gt:234,   mpc:15,  tc:120},
+      {m:'Snowpack',      armor:92,  pick:32,  sword:32,   bow:23,  tal:23,  gt:402,   mpc:25,  tc:200},
+      {m:'Ice Wool',      armor:52,  pick:18,  sword:18,   bow:13,  tal:13,  gt:234,   mpc:15,  tc:120},
+      {m:'Icestone',      armor:100, pick:36,  sword:36,   bow:25,  tal:25,  gt:438,   mpc:27,  tc:216},
+      {m:'Cryoblood',     armor:52,  pick:18,  sword:18,   bow:13,  tal:13,  gt:234,   mpc:15,  tc:120},
+      {m:'Blue Ice',      armor:196, pick:72,  sword:72,   bow:49,  tal:49,  gt:854,   mpc:52,  tc:416},
+      {m:'Glacierstone',  armor:68,  pick:24,  sword:24,   bow:17,  tal:17,  gt:302,   mpc:19,  tc:152},
+      {m:'Frostgene',     armor:68,  pick:24,  sword:24,   bow:17,  tal:17,  gt:302,   mpc:19,  tc:152},
+      {m:'Frost Powder',  armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:1024,  mpc:128, tc:1024},
+      {m:'Icefur',        armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:64,    mpc:8,   tc:64},
+      {m:'Icedrake Egg',  armor:12,  pick:0,   sword:3,    bow:0,   tal:0,   gt:39,    mpc:3,   tc:24},
+    ]
+  },
+  { id:'inferno', name:'Inferno', emoji:'🔥',
+    items:[
+      {m:'Crimson Stem',    armor:108, pick:39,  sword:39,   bow:27,  tal:27,  gt:472,   mpc:29,  tc:232},
+      {m:'Magma',           armor:108, pick:39,  sword:39,   bow:27,  tal:27,  gt:472,   mpc:29,  tc:232},
+      {m:'Firewart',        armor:68,  pick:24,  sword:24,   bow:17,  tal:19,  gt:304,   mpc:19,  tc:152},
+      {m:'Ashrock',         armor:140, pick:51,  sword:51,   bow:33,  tal:37,  gt:608,   mpc:37,  tc:296},
+      {m:'Infernal Quartz', armor:204, pick:75,  sword:75,   bow:51,  tal:51,  gt:880,   mpc:53,  tc:424},
+      {m:'Ancient Debris',  armor:512, pick:192, sword:192,  bow:64,  tal:64,  gt:1536,  mpc:64,  tc:512},
+      {m:'Hellplate',       armor:140, pick:51,  sword:51,   bow:35,  tal:35,  gt:624,   mpc:39,  tc:312},
+      {m:'Bloodplate',      armor:512, pick:192, sword:192,  bow:64,  tal:64,  gt:1536,  mpc:64,  tc:512},
+      {m:'Fire Powder',     armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:1536,  mpc:192, tc:1536},
+      {m:'Fire Core',       armor:12,  pick:0,   sword:3,    bow:0,   tal:0,   gt:39,    mpc:3,   tc:24},
+    ]
+  },
+  { id:'aether', name:'Aether', emoji:'✨',
+    items:[
+      {m:'Aether Wood',    armor:12,  pick:4,   sword:4,    bow:3,   tal:3,   gt:58,    mpc:4,   tc:32},
+      {m:'Celestone',      armor:44,  pick:15,  sword:15,   bow:11,  tal:11,  gt:224,   mpc:16,  tc:128},
+      {m:'Luminium',       armor:44,  pick:15,  sword:15,   bow:11,  tal:11,  gt:224,   mpc:16,  tc:128},
+      {m:'Mycelium',       armor:136, pick:48,  sword:48,   bow:34,  tal:36,  gt:622,   mpc:40,  tc:320},
+      {m:'Aether Tile',    armor:44,  pick:15,  sword:15,   bow:11,  tal:11,  gt:224,   mpc:16,  tc:128},
+      {m:'Aurum',          armor:44,  pick:15,  sword:15,   bow:11,  tal:11,  gt:224,   mpc:16,  tc:128},
+      {m:'Solar Fiber',    armor:20,  pick:6,   sword:6,    bow:5,   tal:5,   gt:106,   mpc:8,   tc:64},
+      {m:'Solaris',        armor:52,  pick:18,  sword:18,   bow:13,  tal:13,  gt:274,   mpc:20,  tc:160},
+      {m:'Luminium Core',  armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:1024,  mpc:128, tc:1024},
+      {m:'Aether Residue', armor:12,  pick:0,   sword:3,    bow:0,   tal:0,   gt:31,    mpc:2,   tc:16},
+    ]
+  },
+  { id:'oblivion', name:'Oblivion', emoji:'🌑',
+    items:[
+      {m:'Faded',           armor:124, pick:45,  sword:45,   bow:31,  tal:31,  gt:572,   mpc:37,  tc:296},
+      {m:'Dusk',            armor:44,  pick:15,  sword:15,   bow:11,  tal:11,  gt:224,   mpc:16,  tc:128},
+      {m:'Void',            armor:44,  pick:15,  sword:15,   bow:11,  tal:11,  gt:224,   mpc:16,  tc:128},
+      {m:'Blackstone',      armor:132, pick:48,  sword:48,   bow:33,  tal:33,  gt:606,   mpc:39,  tc:312},
+      {m:'Obsidian',        armor:108, pick:39,  sword:39,   bow:27,  tal:27,  gt:488,   mpc:31,  tc:248},
+      {m:'Crying Obsidian', armor:116, pick:42,  sword:42,   bow:29,  tal:29,  gt:522,   mpc:33,  tc:264},
+      {m:'Purpur',          armor:156, pick:57,  sword:57,   bow:39,  tal:39,  gt:708,   mpc:45,  tc:360},
+      {m:'Dark Matter',     armor:164, pick:60,  sword:60,   bow:41,  tal:41,  gt:774,   mpc:51,  tc:408},
+      {m:'Void Sensor',     armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:24,    mpc:3,   tc:24},
+      {m:'Abyss Core',      armor:16,  pick:0,   sword:4,    bow:0,   tal:0,   gt:68,    mpc:6,   tc:48},
+    ]
+  },
+  { id:'ocean', name:'Ocean', emoji:'🌊',
+    items:[
+      {m:'Tidewood',    armor:76,  pick:27,  sword:27,   bow:19,  tal:19,  gt:352,   mpc:23,  tc:184},
+      {m:'Azure',       armor:76,  pick:27,  sword:27,   bow:19,  tal:19,  gt:352,   mpc:23,  tc:184},
+      {m:'Seastone',    armor:244, pick:90,  sword:90,   bow:61,  tal:61,  gt:1058,  mpc:64,  tc:512},
+      {m:'Deepstone',   armor:252, pick:93,  sword:93,   bow:63,  tal:63,  gt:1076,  mpc:64,  tc:512},
+      {m:'Aqualith',    armor:260, pick:96,  sword:96,   bow:64,  tal:64,  gt:1092,  mpc:64,  tc:512},
+      {m:'Ocean Token', armor:736, pick:0,   sword:268.5,bow:183, tal:183, gt:2946.5,mpc:197, tc:1576, special:true},
+      {m:'Lobster',     armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:96,    mpc:12,  tc:96},
+      {m:'Ocean Key',   armor:16,  pick:0,   sword:0,    bow:0,   tal:0,   gt:64,    mpc:6,   tc:48},
+      {m:'Token (Tidewood path)',  armor:76,  pick:0, sword:27,   bow:19,  tal:19,  gt:141,   mpc:0, tc:0, special:true},
+      {m:'Token (Azure path)',     armor:152, pick:0, sword:54,   bow:38,  tal:38,  gt:282,   mpc:0, tc:0, special:true},
+      {m:'Token (Seastone path)',  armor:122, pick:0, sword:45,   bow:30.5,tal:30.5,gt:228,   mpc:0, tc:0, special:true},
+      {m:'Token (Deepstone path)', armor:126, pick:0, sword:46.5, bow:31.5,tal:31.5,gt:235.5, mpc:0, tc:0, special:true},
+      {m:'Token (Aqualith path)',  armor:260, pick:0, sword:96,   bow:64,  tal:64,  gt:484,   mpc:0, tc:0, special:true},
+    ]
+  },
+  { id:'desert', name:'Desert', emoji:'🏜️',
+    items:[
+      {m:'Sandstone',          armor:92,  pick:33,  sword:33,   bow:23,  tal:23,  gt:404,  mpc:25,  tc:200},
+      {m:'Straw',              armor:36,  pick:9,   sword:9,    bow:7,   tal:6,   gt:139,  mpc:9,   tc:72},
+      {m:'Amber',              armor:100, pick:36,  sword:36,   bow:25,  tal:25,  gt:438,  mpc:27,  tc:216},
+      {m:'Desert Rust',        armor:20,  pick:6,   sword:6,    bow:5,   tal:5,   gt:90,   mpc:6,   tc:48},
+      {m:'Desert Relic',       armor:68,  pick:24,  sword:24,   bow:17,  tal:17,  gt:302,  mpc:19,  tc:152},
+      {m:'Desert Flareon',     armor:76,  pick:27,  sword:27,   bow:19,  tal:19,  gt:336,  mpc:21,  tc:168},
+      {m:'Leg. Artifact – Rust',    armor:280, pick:84, sword:84, bow:70, tal:70, gt:1260, mpc:84, tc:672, special:true},
+      {m:'Leg. Artifact – Relic',   armor:136, pick:48, sword:48, bow:34, tal:34, gt:604,  mpc:38, tc:304, special:true},
+      {m:'Leg. Artifact – Flareon', armor:228, pick:81, sword:81, bow:57, tal:57, gt:1008, mpc:63, tc:504, special:true},
+      {m:'Worm Teeth',         armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:1024, mpc:128, tc:1024},
+      {m:'Sting',              armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:1024, mpc:128, tc:1024},
+      {m:'Golem Essence',      armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   gt:32,   mpc:4,   tc:32},
+      {m:'Dog Core',           armor:16,  pick:0,   sword:4,    bow:0,   tal:0,   gt:68,   mpc:6,   tc:48},
+    ]
+  },
+];
+
+const GEAR = [
+  {key:'armor', icon:'🛡', label:'Armor'},
+  {key:'pick',  icon:'⛏', label:'Pickaxe'},
+  {key:'sword', icon:'⚔', label:'Sword'},
+  {key:'bow',   icon:'🏹', label:'Bow'},
+  {key:'tal',   icon:'🔮', label:'Talisman'},
+];
+const GEAR_BY_KEY = Object.fromEntries(GEAR.map(g => [g.key, g]));
+const STACK = 64;
+
+function fmtNum(n) {
+  if (n == null) return '—';
+  if (Number.isInteger(n)) return n.toLocaleString();
+  return n.toLocaleString(undefined, { maximumFractionDigits: 1 });
+}
+function stackStr(n) {
+  if (!n) return '0';
+  const stacks = Math.floor(n / STACK);
+  const rem = +(n - stacks * STACK).toFixed(1);
+  if (stacks === 0) return `${rem}`;
+  if (rem === 0) return `${stacks} stack${stacks!==1?'s':''}`;
+  return `${stacks} stack${stacks!==1?'s':''} + ${rem}`;
+}
+
+const tabsEl  = document.getElementById('biomeTabs');
+const sectsEl = document.getElementById('sections');
+
+// "All" biome tab
+const allTab = document.createElement('button');
+allTab.className = 'biome-tab active';
+allTab.dataset.biome = 'all';
+allTab.innerHTML = `<span>🌐</span> All Biomes`;
+allTab.addEventListener('click', () => switchBiome('all'));
+tabsEl.appendChild(allTab);
+
+BIOMES.forEach(b => {
+  const tab = document.createElement('button');
+  tab.className = 'biome-tab';
+  tab.dataset.biome = b.id;
+  tab.innerHTML = `<span>${b.emoji}</span> ${b.name}`;
+  tab.addEventListener('click', () => switchBiome(b.id));
+  tabsEl.appendChild(tab);
+
+  const sec = document.createElement('div');
+  sec.className = 'biome-section';
+  sec.id = `sec-${b.id}`;
+
+  sec.innerHTML = `
+    <div class="biome-header">
+      <div class="biome-emoji">${b.emoji}</div>
+      <span class="biome-name">${b.name}</span>
+      <div class="biome-divider"></div>
+      <span class="biome-count" id="cnt-${b.id}">${b.items.length} materials</span>
+    </div>
+    <div class="card-grid" id="grid-${b.id}"></div>
+  `;
+
+  const grid = sec.querySelector(`#grid-${b.id}`);
+  b.items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'mat-card';
+    card.dataset.material = item.m.toLowerCase();
+    GEAR.forEach(g => card.dataset[g.key] = item[g.key] || 0);
+
+    const gearSum = GEAR.reduce((s, g) => s + (item[g.key] || 0), 0);
+    card.dataset.gearSum = gearSum;
+
+    const cells = GEAR.map(g => {
+      const v = item[g.key];
+      const zero = !v;
+      return `<div class="gear-cell${zero?' zero':''}" data-type="${g.key}" title="${g.label}: ${fmtNum(v||0)}">
+        <span class="gico">${g.icon}</span>
+        <span class="gval">${zero ? '—' : fmtNum(v)}</span>
+      </div>`;
+    }).join('');
+
+    // Pre-render each gear's focus block; we'll switch which is visible.
+    const focusBlocks = GEAR.map(g => {
+      const v = item[g.key] || 0;
+      return `<div class="gear-focus" data-focus="${g.key}">
+        <div class="focus-row">
+          <div>
+            <div class="focus-label">${g.icon} ${g.label} needs</div>
+            <div class="focus-stacks">≈ <strong>${stackStr(v)}</strong> ${v ? '' : '<em style="color:#888">— not used</em>'}</div>
+          </div>
+          <div class="focus-val">${fmtNum(v)}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    let whHtml = '';
+    if (item.mpc != null && item.mpc !== 0) {
+      card.dataset.mpc = item.mpc;
+      whHtml = `
+        <div class="wh-block">
+          <div class="wh-block-label">🪵 World Head</div>
+          <div class="wh-row" data-wh-per-head><span>per head</span><strong>${fmtNum(item.mpc)}</strong></div>
+          <div class="wh-row" data-wh-total-row><span><span data-wh-count-label>—</span> heads</span><strong data-wh-total>—</strong></div>
+          <div class="wh-row" data-wh-stacks-row><span>≈ stacks</span><strong data-wh-stacks>—</strong></div>
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="card-head">
+        <span class="mat-name${item.special?' special':''}">${item.m}</span>
+      </div>
+      <div class="gear-row">${cells}</div>
+      ${focusBlocks}
+      <div class="total-line">
+        <span class="stacks">≈ <strong data-total-stacks>—</strong></span>
+        <span class="total-val" data-total-big><span class="raw-label">total</span><span data-total-val>—</span></span>
+      </div>
+      ${whHtml}
+    `;
+
+    grid.appendChild(card);
+  });
+
+  sectsEl.appendChild(sec);
+});
+
+const TOTAL = BIOMES.reduce((s,b) => s + b.items.length, 0);
+document.getElementById('sumTotal').textContent = TOTAL;
+document.getElementById('sumShowing').textContent = TOTAL;
+
+let activeBiome = 'all', activeGear = 'all', searchQ = '', whCount = 1;
+
+function updateWHTotals() {
+  document.querySelectorAll('.mat-card').forEach(card => {
+    const mpc = parseFloat(card.dataset.mpc || 0);
+    const gearSum = parseFloat(card.dataset.gearSum || 0);
+
+    // World Head block (only present if mpc > 0)
+    if (mpc) {
+      const whTotal = mpc * whCount;
+      const whTotalEl = card.querySelector('[data-wh-total]');
+      const whStackEl = card.querySelector('[data-wh-stacks]');
+      if (whTotalEl) whTotalEl.textContent = fmtNum(whTotal);
+      if (whStackEl) whStackEl.textContent = stackStr(whTotal);
+      card.querySelectorAll('[data-wh-count-label]').forEach(el => { el.textContent = whCount; });
+
+      // Dedupe: when whCount===1, the "N heads" row repeats the per-head row.
+      // Also hide the stacks line if mpc < 64 (less than one stack — pointless).
+      const totalRow  = card.querySelector('[data-wh-total-row]');
+      const stacksRow = card.querySelector('[data-wh-stacks-row]');
+      if (totalRow)  totalRow.style.display  = whCount === 1 ? 'none' : '';
+      if (stacksRow) stacksRow.style.display = whTotal >= 64 ? '' : 'none';
+    }
+
+    // Bottom-line grand total: gear sum + (mpc × whCount)
+    const grandTotal = gearSum + mpc * whCount;
+    const totalValEl = card.querySelector('[data-total-val]');
+    const totalStackEl = card.querySelector('[data-total-stacks]');
+    const totalBigEl = card.querySelector('[data-total-big]');
+    if (totalValEl) totalValEl.textContent = fmtNum(grandTotal);
+    if (totalStackEl) totalStackEl.textContent = stackStr(grandTotal);
+    if (totalBigEl) totalBigEl.classList.toggle('big', grandTotal >= 500);
+  });
+}
+
+const whCountInput = document.getElementById('whCountInput');
+
+document.querySelectorAll('.wh-count-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    whCount = parseInt(btn.dataset.count, 10);
+    document.querySelectorAll('.wh-count-btn').forEach(b => b.classList.toggle('active', b === btn));
+    whCountInput.classList.remove('active');
+    whCountInput.value = '';
+    updateWHTotals();
+  });
+});
+
+whCountInput.addEventListener('input', () => {
+  const v = parseInt(whCountInput.value, 10);
+  if (!Number.isFinite(v) || v <= 0) return;
+  whCount = v;
+  document.querySelectorAll('.wh-count-btn').forEach(b => b.classList.remove('active'));
+  whCountInput.classList.add('active');
+  updateWHTotals();
+});
+
+function switchBiome(id) {
+  activeBiome = id;
+  document.querySelectorAll('.biome-tab').forEach(t => t.classList.toggle('active', t.dataset.biome === id));
+  applyFilters();
+}
+
+document.querySelectorAll('.gear-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeGear = btn.dataset.filter;
+    document.querySelectorAll('.gear-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === activeGear));
+    applyFilters();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQ = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+function applyFilters() {
+  let showing = 0;
+  const focused = activeGear !== 'all';
+
+  BIOMES.forEach(b => {
+    const sec = document.getElementById(`sec-${b.id}`);
+    const biomeVisible = activeBiome === 'all' || activeBiome === b.id;
+    if (!biomeVisible) { sec.style.display = 'none'; return; }
+    sec.style.display = '';
+
+    const grid = document.getElementById(`grid-${b.id}`);
+    const cards = Array.from(grid.querySelectorAll('.mat-card'));
+    let cnt = 0;
+
+    cards.forEach(card => {
+      const nameOk = !searchQ || card.dataset.material.includes(searchQ);
+      const gearVal = parseFloat(card.dataset[activeGear] || 0);
+      // When focused on a gear, hide cards that don't use it.
+      const gearOk = !focused || gearVal > 0;
+      const show = nameOk && gearOk;
+      card.classList.toggle('row-hidden', !show);
+
+      // Switch focus mode on the card.
+      card.classList.toggle('focused', focused);
+      if (focused) {
+        card.querySelectorAll('.gear-focus').forEach(el => {
+          el.style.display = el.dataset.focus === activeGear ? 'block' : 'none';
+        });
+      } else {
+        card.querySelectorAll('.gear-focus').forEach(el => { el.style.display = ''; });
+      }
+
+      if (show) { cnt++; showing++; }
+    });
+
+    document.getElementById(`cnt-${b.id}`).textContent = `${cnt} material${cnt!==1?'s':''}`;
+    sec.style.display = cnt === 0 ? 'none' : '';
+  });
+
+  document.getElementById('sumShowing').textContent = showing;
+  document.getElementById('noResults').classList.toggle('visible', showing === 0);
+}
+
+updateWHTotals();
+applyFilters();
+</script>
+</body>
+</html>
