@@ -8,6 +8,8 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="description" content="RageMines Shopkeeper Trades - Browse all trades available on the server.">
   <title>Trades - RageMines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
   <link rel="stylesheet" href="assets/web/assets/mobirise-icons/mobirise-icons.css">
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
@@ -21,6 +23,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap"></noscript>
   <link rel="preload" href="https://fonts.googleapis.com/css?family=Jost:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"></noscript>
+  <link rel="stylesheet" href="site-header.css?v=nav-fix-2">
   <style>
     :root {
       --rage-red: #c0392b;
@@ -208,17 +211,6 @@
       font-size: 1.1rem;
     }
 
-    /* Footer */
-    .footer {
-      border-top: 1px solid rgba(192,57,43,0.2);
-      padding: 20px;
-      text-align: center;
-      color: #555;
-      font-size: 0.85rem;
-    }
-    .footer a { color: var(--rage-crimson); text-decoration: none; }
-    .footer a:hover { text-decoration: underline; }
-
     /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: var(--rage-darker); }
@@ -280,48 +272,37 @@
 </head>
 <body>
 
-<section data-bs-version="5.1" class="menu menu2 cid-tkbL8n4vab" once="menu" id="menu2-16">
-  <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
-    <div class="container-fluid">
-      <div class="navbar-brand">
-        <span class="navbar-logo">
-          <a href="index.html">
-            <img src="assets/images/server/logo.png" alt="RageMines" style="height: 3rem;">
-          </a>
-        </span>
-        <span class="navbar-caption-wrap"><a class="navbar-caption text-white display-7" href="index.html">RageMines</a></span>
-      </div>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <div class="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#features-section">Features</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="economy.html">Economy</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="trades.html" style="color: var(--rage-crimson) !important;">Trades</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="materials.html">Materials</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#gallery-section">Gallery</a></li>
-        </ul>
-        <div class="navbar-buttons mbr-section-btn" style="display: flex; gap: 10px;">
-          <a class="btn btn-primary display-4" href="https://store.ragemines.com" target="_blank">
-            <span class="mobi-mbri mobi-mbri-shopping-basket mbr-iconfont mbr-iconfont-btn"></span>
-            Store
-          </a>
-          <a class="btn btn-primary display-4" href="https://discord.gg/RageMines" target="_blank">
-            <span class="socicon socicon-discord mbr-iconfont mbr-iconfont-btn" style="font-size: 1rem;"></span>
-            Discord
-          </a>
-        </div>
-      </div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="RageMines home">
+      <img src="assets/images/ragemines-logo.png" alt="" width="48" height="48">
+      <span class="brand-copy">
+        <strong>RageMines</strong>
+      </span>
+    </a>
+
+    <nav class="header-nav" aria-label="Primary navigation">
+      <a href="index.html">Home</a>
+      <a href="wiki.html">Wiki</a>
+      <a href="economy.html">Economy</a>
+      <a class="is-current" href="trades.html">Trades</a>
+      <a href="materials.html">Materials</a>
+      <a href="index.html#features">Features</a>
+      <a href="index.html#gallery">Gallery</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="header-button header-button-ghost" href="https://store.ragemines.com" target="_blank" rel="noreferrer">
+        Store
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"></path><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"></path></svg>
+      </a>
+      <a class="header-button header-button-primary" href="https://discord.gg/RageMines" target="_blank" rel="noreferrer">
+        <span class="socicon socicon-discord" aria-hidden="true"></span>
+        Discord
+      </a>
     </div>
-  </nav>
-</section>
+  </div>
+</header>
 
 <div class="page-header">
   <h1>Shopkeeper <span>Trades</span></h1>
@@ -363,9 +344,28 @@
   <div class="no-results" id="noResults" style="display:none;">No trades found matching your filters.</div>
 </div>
 
-<div class="footer">
-  &copy; 2026 <a href="index.html">RageMines</a>. All rights reserved. We do not have affiliation with any real world brands.
-</div>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-brand">
+      <img src="assets/images/ragemines-logo.png" alt="" width="34" height="34">
+      <div><strong>RageMines</strong><span>Minecraft BoxPVP server.</span></div>
+    </div>
+    <div class="site-footer-links">
+      <nav class="site-footer-nav" aria-label="Footer navigation">
+        <a href="index.html">Home</a>
+        <a href="wiki.html">Wiki</a>
+        <a href="economy.html">Economy</a>
+        <a href="trades.html">Trades</a>
+        <a href="materials.html">Materials</a>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#gallery">Gallery</a>
+        <a href="https://store.ragemines.com" target="_blank" rel="noreferrer">Store</a>
+        <a href="https://discord.gg/RageMines" target="_blank" rel="noreferrer">Discord</a>
+      </nav>
+    </div>
+    <p class="site-footer-bottom">© 2026 RageMines. All rights reserved. We do not have affiliation with any real world brands.</p>
+  </div>
+</footer>
 
 <script src="trades-data.js"></script>
 <script>
@@ -497,7 +497,7 @@
 
 <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-<script src="assets/theme/js/script.js"></script>
+<script src="assets/theme/js/script.js?v=nav-fix-2"></script>
 
 </body>
 </html>

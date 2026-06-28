@@ -8,6 +8,8 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="description" content="RageMines Materials Guide — how many materials you need to craft a full set of gear, broken down by biome.">
   <title>Materials Guide - RageMines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
   <link rel="stylesheet" href="assets/web/assets/mobirise-icons/mobirise-icons.css">
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
@@ -21,6 +23,7 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap"></noscript>
   <link rel="preload" href="https://fonts.googleapis.com/css?family=Jost:100,200,300,400,500,600,700,800,900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:100,200,300,400,500,600,700,800,900&display=swap"></noscript>
+  <link rel="stylesheet" href="site-header.css?v=nav-fix-2">
   <style>
     :root {
       --rage-red: #c0392b;
@@ -455,17 +458,6 @@
     .info-banner strong { color: #fff; }
     .info-banner .info-icon { color: var(--rage-crimson); margin-right: 6px; font-weight: 700; }
 
-    /* Footer */
-    .footer {
-      border-top: 1px solid rgba(192,57,43,0.2);
-      padding: 20px;
-      text-align: center;
-      color: #666;
-      font-size: 0.85rem;
-    }
-    .footer a { color: var(--rage-crimson); text-decoration: none; }
-    .footer a:hover { text-decoration: underline; }
-
     /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: var(--rage-darker); }
@@ -492,13 +484,59 @@
       font-size: 0.7rem;
       font-weight: 600;
     }
-    .creator-credit .credit-name code {
+    .creator-credit .credit-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .creator-credit .credit-name code,
+    .creator-credit .credit-copy {
       font-family: 'Jost', monospace;
       color: var(--rage-crimson);
       background: rgba(192,57,43,0.18);
       padding: 2px 8px;
+      border: 0;
       border-radius: 5px;
       font-size: 0.82rem;
+      line-height: 1.45;
+    }
+    .creator-credit .credit-copy {
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .creator-credit .credit-copy:hover,
+    .creator-credit .credit-copy:focus-visible {
+      color: #fff;
+      background: rgba(231,76,60,0.28);
+      outline: none;
+    }
+    .creator-credit .credit-copy::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      bottom: calc(100% + 8px);
+      padding: 5px 8px;
+      border: 1px solid rgba(231,76,60,0.35);
+      border-radius: 6px;
+      background: rgba(13,5,5,0.96);
+      color: #eee;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .creator-credit .credit-copy:hover::after,
+    .creator-credit .credit-copy:focus-visible::after {
+      opacity: 1;
+      transform: translate(-50%, 0);
     }
 
     @media (max-width: 768px) {
@@ -512,48 +550,37 @@
 </head>
 <body>
 
-<section data-bs-version="5.1" class="menu menu2 cid-tkbL8n4vab" once="menu" id="menu2-16">
-  <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
-    <div class="container-fluid">
-      <div class="navbar-brand">
-        <span class="navbar-logo">
-          <a href="index.html">
-            <img src="assets/images/server/logo.png" alt="RageMines" style="height: 3rem;">
-          </a>
-        </span>
-        <span class="navbar-caption-wrap"><a class="navbar-caption text-white display-7" href="index.html">RageMines</a></span>
-      </div>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <div class="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav nav-dropdown" data-app-modern-menu="true">
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#features-section">Features</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="economy.html">Economy</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="trades.html">Trades</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="materials.html" style="color: var(--rage-crimson) !important;">Materials</a></li>
-          <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#gallery-section">Gallery</a></li>
-        </ul>
-        <div class="navbar-buttons mbr-section-btn" style="display: flex; gap: 10px;">
-          <a class="btn btn-primary display-4" href="https://store.ragemines.com" target="_blank">
-            <span class="mobi-mbri mobi-mbri-shopping-basket mbr-iconfont mbr-iconfont-btn"></span>
-            Store
-          </a>
-          <a class="btn btn-primary display-4" href="https://discord.gg/RageMines" target="_blank">
-            <span class="socicon socicon-discord mbr-iconfont mbr-iconfont-btn" style="font-size: 1rem;"></span>
-            Discord
-          </a>
-        </div>
-      </div>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="RageMines home">
+      <img src="assets/images/ragemines-logo.png" alt="" width="48" height="48">
+      <span class="brand-copy">
+        <strong>RageMines</strong>
+      </span>
+    </a>
+
+    <nav class="header-nav" aria-label="Primary navigation">
+      <a href="index.html">Home</a>
+      <a href="wiki.html">Wiki</a>
+      <a href="economy.html">Economy</a>
+      <a href="trades.html">Trades</a>
+      <a class="is-current" href="materials.html">Materials</a>
+      <a href="index.html#features">Features</a>
+      <a href="index.html#gallery">Gallery</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="header-button header-button-ghost" href="https://store.ragemines.com" target="_blank" rel="noreferrer">
+        Store
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"></path><path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"></path></svg>
+      </a>
+      <a class="header-button header-button-primary" href="https://discord.gg/RageMines" target="_blank" rel="noreferrer">
+        <span class="socicon socicon-discord" aria-hidden="true"></span>
+        Discord
+      </a>
     </div>
-  </nav>
-</section>
+  </div>
+</header>
 
 <!-- HEADER -->
 <div class="page-header">
@@ -561,7 +588,11 @@
   <p>Everything you need to craft a <strong>full set of gear</strong> in RageMines, broken down by biome and gear type.</p>
   <div class="creator-credit">
     <span class="credit-label">made by</span>
-    <span class="credit-name"><code>@tigashacker</code> &amp; <code>@yuukinochan</code></span>
+    <span class="credit-name">
+      <button class="credit-copy" type="button" data-credit-copy="tigashacker" data-tooltip="@tigashacker" title="@tigashacker" aria-label="Copy tigashacker">Nightmare007_</button>
+      <span aria-hidden="true">&amp;</span>
+      <button class="credit-copy" type="button" data-credit-copy="yuukinochan" data-tooltip="@yuukinochan" title="@yuukinochan" aria-label="Copy yuukinochan">UniqueMemory</button>
+    </span>
   </div>
 </div>
 
@@ -610,13 +641,32 @@
   <div id="noResults" class="no-results">No materials match your search.</div>
 </div>
 
-<div class="footer">
-  &copy; 2026 <a href="index.html">RageMines</a>. All rights reserved. We do not have affiliation with any real world brands.
-</div>
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-brand">
+      <img src="assets/images/ragemines-logo.png" alt="" width="34" height="34">
+      <div><strong>RageMines</strong><span>Minecraft BoxPVP server.</span></div>
+    </div>
+    <div class="site-footer-links">
+      <nav class="site-footer-nav" aria-label="Footer navigation">
+        <a href="index.html">Home</a>
+        <a href="wiki.html">Wiki</a>
+        <a href="economy.html">Economy</a>
+        <a href="trades.html">Trades</a>
+        <a href="materials.html">Materials</a>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#gallery">Gallery</a>
+        <a href="https://store.ragemines.com" target="_blank" rel="noreferrer">Store</a>
+        <a href="https://discord.gg/RageMines" target="_blank" rel="noreferrer">Discord</a>
+      </nav>
+    </div>
+    <p class="site-footer-bottom">© 2026 RageMines. All rights reserved. We do not have affiliation with any real world brands.</p>
+  </div>
+</footer>
 
 <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-<script src="assets/theme/js/script.js"></script>
+<script src="assets/theme/js/script.js?v=nav-fix-2"></script>
 
 <script>
 const BIOMES = [
@@ -725,14 +775,14 @@ const BIOMES = [
       {m:'Seastone',    armor:244, pick:90,  sword:90,   bow:61,  tal:61,  mpc:64},
       {m:'Deepstone',   armor:252, pick:93,  sword:93,   bow:63,  tal:63,  mpc:64},
       {m:'Aqualith',    armor:260, pick:96,  sword:96,   bow:64,  tal:64,  mpc:64},
-      {m:'Ocean Token – Total', armor:736, pick:268.5,   sword:268.5,bow:183, tal:183, mpc:197, special:true},
+      {m:'Ocean Token', armor:736, pick:0,   sword:268.5,bow:183, tal:183, mpc:197, special:true},
       {m:'Lobster',     armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   mpc:12},
-      {m:'Ocean Key',   armor:16,  pick:0,   sword:0,    bow:0,   tal:0,   mpc:6},
-      {m:'Ocean Token – Tidewood',  armor:76,  pick:27, sword:27,   bow:19,  tal:19,  mpc:0, special:true},
-      {m:'Ocean Token – Azure',     armor:152, pick:54, sword:54,   bow:38,  tal:38,  mpc:0, special:true},
-      {m:'Ocean Token – Seastone',  armor:122, pick:45, sword:45,   bow:30.5,tal:30.5,mpc:0, special:true},
-      {m:'Ocean Token – Deepstone', armor:126, pick:46.5, sword:46.5, bow:31.5,tal:31.5,mpc:0, special:true},
-      {m:'Ocean Token – Aqualith',  armor:260, pick:96, sword:96,   bow:64,  tal:64,  mpc:0, special:true},
+      {m:'Ocean Key',   armor:16,  pick:0,   sword:4,    bow:0,   tal:0,   mpc:6},
+      {m:'Token (Tidewood path)',  armor:76,  pick:0, sword:27,   bow:19,  tal:19,  mpc:0, special:true},
+      {m:'Token (Azure path)',     armor:152, pick:0, sword:54,   bow:38,  tal:38,  mpc:0, special:true},
+      {m:'Token (Seastone path)',  armor:122, pick:0, sword:45,   bow:30.5,tal:30.5,mpc:0, special:true},
+      {m:'Token (Deepstone path)', armor:126, pick:0, sword:46.5, bow:31.5,tal:31.5,mpc:0, special:true},
+      {m:'Token (Aqualith path)',  armor:260, pick:0, sword:96,   bow:64,  tal:64,  mpc:0, special:true},
     ]
   },
   { id:'desert', name:'Desert', emoji:'🏜️',
@@ -743,14 +793,14 @@ const BIOMES = [
       {m:'Desert Rust',        armor:20,  pick:6,   sword:6,    bow:5,   tal:5,   mpc:6},
       {m:'Desert Relic',       armor:68,  pick:24,  sword:24,   bow:17,  tal:17,  mpc:19},
       {m:'Desert Flareon',     armor:76,  pick:27,  sword:27,   bow:19,  tal:19,  mpc:21},
+      {m:'Leg. Artifact – Rust',    armor:200, pick:60, sword:60, bow:50, tal:50, mpc:60, special:true},
+      {m:'Leg. Artifact – Relic',   armor:136, pick:48, sword:48, bow:34, tal:34, mpc:38, special:true},
+      {m:'Leg. Artifact – Flareon', armor:152, pick:54, sword:54, bow:38, tal:38, mpc:42, special:true},
       {m:'Leg. Artifact – Total',   armor:488, pick:162,sword:162,bow:122,tal:122,mpc:140,special:true},
       {m:'Worm Teeth',         armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   mpc:128},
       {m:'Sting',              armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   mpc:128},
       {m:'Golem Essence',      armor:0,   pick:0,   sword:0,    bow:0,   tal:0,   mpc:4},
       {m:'Dog Core',           armor:16,  pick:0,   sword:4,    bow:0,   tal:0,   mpc:6},
-      {m:'Leg. Artifact – Rust',    armor:200, pick:60, sword:60, bow:50, tal:50, mpc:60, special:true},
-      {m:'Leg. Artifact – Relic',   armor:136, pick:48, sword:48, bow:34, tal:34, mpc:38, special:true},
-      {m:'Leg. Artifact – Flareon', armor:152, pick:54, sword:54, bow:38, tal:38, mpc:42, special:true},
     ]
   },
   { id:'magicworld', name:'Magic World', emoji:'🍄',
@@ -989,6 +1039,51 @@ document.querySelectorAll('.gear-btn').forEach(btn => {
 document.getElementById('searchInput').addEventListener('input', e => {
   searchQ = e.target.value.toLowerCase().trim();
   applyFilters();
+});
+
+async function copyCredit(value) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {
+      // Use the fallback below if clipboard permissions are unavailable.
+    }
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = value;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.top = '-1000px';
+  textarea.style.opacity = '0';
+  document.body.append(textarea);
+  textarea.select();
+  textarea.setSelectionRange(0, value.length);
+
+  let copied = false;
+  try {
+    copied = document.execCommand('copy');
+  } catch {
+    copied = false;
+  }
+
+  textarea.remove();
+  return copied;
+}
+
+document.querySelectorAll('[data-credit-copy]').forEach(button => {
+  button.addEventListener('click', async () => {
+    const value = button.dataset.creditCopy;
+    const copied = await copyCredit(value);
+    const label = copied ? `${value} copied` : `Copy ${value}`;
+
+    button.setAttribute('aria-label', label);
+    window.clearTimeout(button.copyResetTimer);
+    button.copyResetTimer = window.setTimeout(() => {
+      button.setAttribute('aria-label', `Copy ${value}`);
+    }, 1600);
+  });
 });
 
 function applyFilters() {
