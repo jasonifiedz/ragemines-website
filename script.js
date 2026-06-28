@@ -238,7 +238,7 @@ function updateResults() {
     };
     summaryText.textContent = `Showing ${categoryLabels[activeCategory]}`;
   } else {
-    summaryText.textContent = "Showing the complete wiki shell";
+    summaryText.textContent = "";
   }
 
   clearSearchButton.hidden = !query && activeCategory === "all";
