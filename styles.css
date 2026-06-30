@@ -31,6 +31,8 @@
 }
 
 html {
+  min-height: 100%;
+  background-color: var(--bg);
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 92px);
   scrollbar-gutter: stable;
@@ -58,17 +60,40 @@ html {
 
 body {
   margin: 0;
+  min-height: 100vh;
   min-width: 320px;
   overflow-x: hidden;
   overflow-y: auto;
   background:
     radial-gradient(circle at 70% 18%, rgba(147, 24, 21, 0.1), transparent 34rem),
     linear-gradient(180deg, #0b0708 0%, var(--bg) 32%, #080607 100%);
+  background-color: var(--bg);
   color: var(--text);
   font-family: "Jost", system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+}
+
+body.wiki-page {
+  position: relative;
+  background-color: var(--bg);
+  isolation: isolate;
+}
+
+body.wiki-page::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background-color: var(--bg);
+  pointer-events: none;
+}
+
+body.wiki-page main,
+body.wiki-page .wiki-layout,
+body.wiki-page .wiki-content {
+  background-color: var(--bg);
 }
 
 body.nav-open {
