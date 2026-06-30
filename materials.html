@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <script>document.documentElement.className += ' fonts-loading';</script>
+  <style>
+    html.fonts-loading body { opacity: 0; }
+    html.fonts-loaded body { opacity: 1; transition: opacity 0.2s ease-in; }
+  </style>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -19,8 +24,8 @@
   <link rel="stylesheet" href="assets/socicon/css/styles.css">
   <link rel="stylesheet" href="assets/theme/css/style.css">
   <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=optional">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700,800&display=optional">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700,800&display=swap">
   <link rel="stylesheet" href="site-header.css?v=nav-fix-3">
   <style>
     :root {
@@ -66,7 +71,7 @@
     /* Page header */
     .page-header { text-align: center; padding: 40px 20px 16px; }
     .page-header h1 {
-      font-family: 'Fredoka One', display;
+      font-family: 'Fredoka One', sans-serif;
       font-size: 2.5rem;
       color: #fff;
       text-shadow: 0 0 30px rgba(192,57,43,0.3);
@@ -99,7 +104,7 @@
       letter-spacing: 0.4px;
     }
     .summary-pill strong { color: #fff; font-weight: 600; margin-left: 4px; }
-    .summary-pill .count { color: var(--rage-crimson); font-family: 'Fredoka One', display; font-size: 0.95rem; margin-right: 4px; }
+    .summary-pill .count { color: var(--rage-crimson); font-family: 'Fredoka One', sans-serif; font-size: 0.95rem; margin-right: 4px; }
 
     /* Controls */
     .controls {
@@ -258,7 +263,7 @@
       border-radius: 10px;
     }
     .biome-name {
-      font-family: 'Fredoka One', display;
+      font-family: 'Fredoka One', sans-serif;
       color: var(--rage-crimson);
       font-size: 1.2rem;
       letter-spacing: 0.4px;
@@ -294,7 +299,7 @@
       gap: 10px; margin-bottom: 10px;
     }
     .mat-name {
-      font-family: 'Fredoka One', display;
+      font-family: 'Fredoka One', sans-serif;
       color: #fff;
       font-size: 1rem;
       line-height: 1.25;
@@ -361,7 +366,7 @@
       font-weight: 600;
     }
     .gear-focus .focus-val {
-      font-family: 'Fredoka One', display;
+      font-family: 'Fredoka One', sans-serif;
       color: #fff;
       font-size: 1.4rem;
       text-shadow: 0 0 14px rgba(231,76,60,0.4);
@@ -371,7 +376,7 @@
       font-size: 0.78rem;
       margin-top: 2px;
     }
-    .gear-focus .focus-stacks strong { color: #fff; font-family: 'Fredoka One', display; font-weight: 400; font-size: 0.92rem; margin: 0 2px; }
+    .gear-focus .focus-stacks strong { color: #fff; font-family: 'Fredoka One', sans-serif; font-weight: 400; font-size: 0.92rem; margin: 0 2px; }
     .mat-card.focused .gear-row { display: none; }
     .mat-card.focused .gear-focus { display: block; }
     .mat-card.focused .total-line { display: none; }
@@ -1129,6 +1134,23 @@ function applyFilters() {
 
 updateWHTotals();
 applyFilters();
+</script>
+<script>
+  (function () {
+    var html = document.documentElement;
+    function reveal() {
+      html.classList.remove('fonts-loading');
+      html.classList.add('fonts-loaded');
+    }
+    if (document.fonts && document.fonts.ready) {
+      Promise.race([
+        document.fonts.ready,
+        new Promise(function (resolve) { setTimeout(resolve, 2000); })
+      ]).then(reveal);
+    } else {
+      reveal();
+    }
+  })();
 </script>
 </body>
 </html>

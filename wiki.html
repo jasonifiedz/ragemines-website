@@ -3,6 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.className += ' fonts-loading';</script>
+  <style>
+    html.fonts-loading body { opacity: 0; }
+    html.fonts-loaded body { opacity: 1; transition: opacity 0.2s ease-in; }
+  </style>
   <meta name="description" content="The official RageMines Wiki shell for worlds, systems, events, features, and progression.">
   <meta name="theme-color" content="#0b0708">
   <meta property="og:title" content="RageMines Wiki">
@@ -12,8 +17,8 @@
   <link rel="icon" href="assets/images/ragemines-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=optional">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700,800,400i,500i,600i,700i,800i&display=optional">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700,800,400i,500i,600i,700i,800i&display=swap">
   <link rel="stylesheet" href="assets/socicon/css/styles.css">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="site-header.css?v=nav-fix-3">
@@ -4534,5 +4539,22 @@
 
   <div class="toast" id="copy-toast" role="status" aria-live="polite">Server address copied</div>
   <script src="script.js"></script>
+  <script>
+    (function () {
+      var html = document.documentElement;
+      function reveal() {
+        html.classList.remove('fonts-loading');
+        html.classList.add('fonts-loaded');
+      }
+      if (document.fonts && document.fonts.ready) {
+        Promise.race([
+          document.fonts.ready,
+          new Promise(function (resolve) { setTimeout(resolve, 2000); })
+        ]).then(reveal);
+      } else {
+        reveal();
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+  <script>document.documentElement.className += ' fonts-loading';</script>
+  <style>
+    html.fonts-loading body { opacity: 0; }
+    html.fonts-loaded body { opacity: 1; transition: opacity 0.2s ease-in; }
+  </style>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -19,8 +24,8 @@
   <link rel="stylesheet" href="assets/socicon/css/styles.css">
   <link rel="stylesheet" href="assets/theme/css/style.css">
   <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css" type="text/css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=optional">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700,800,400i,500i,600i,700i,800i&display=optional">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One:400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jost:400,500,600,700,800,400i,500i,600i,700i,800i&display=swap">
   <link rel="stylesheet" href="site-header.css?v=nav-fix-3">
   <style>
     :root {
@@ -86,7 +91,7 @@
       padding: 40px 20px 20px;
     }
     .page-header h1 {
-      font-family: 'Fredoka One', display;
+      font-family: 'Fredoka One', sans-serif;
       font-size: 2.5rem;
       color: #fff;
       text-shadow: 0 0 30px rgba(192,57,43,0.3);
@@ -496,6 +501,22 @@
 <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="assets/dropdown/js/navbar-dropdown.js"></script>
 <script src="assets/theme/js/script.js?v=nav-fix-2"></script>
-
+<script>
+  (function () {
+    var html = document.documentElement;
+    function reveal() {
+      html.classList.remove('fonts-loading');
+      html.classList.add('fonts-loaded');
+    }
+    if (document.fonts && document.fonts.ready) {
+      Promise.race([
+        document.fonts.ready,
+        new Promise(function (resolve) { setTimeout(resolve, 2000); })
+      ]).then(reveal);
+    } else {
+      reveal();
+    }
+  })();
+</script>
 </body>
 </html>
