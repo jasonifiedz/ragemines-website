@@ -673,6 +673,20 @@
 <script src="assets/theme/js/script.js?v=nav-fix-2"></script>
 
 <script>
+const INFUSED_MATERIAL_DROP_YIELDS = {
+  'Infused Space Mud': 16,
+  'Infused Meteorite': 6,
+  'Infused Starwood': 4,
+  'Infused Frostnova': 16,
+  'Infused Astrorock': 16,
+  'Infused Eclipse': 16,
+};
+
+function getBossDropsRequired(totalRequired, dropYield) {
+  if (!totalRequired || totalRequired <= 0) return 0;
+  return Math.ceil(totalRequired / dropYield);
+}
+
 const BIOMES = [
   { id:'overworld', name:'Overworld', emoji:'🌿',
     items:[
@@ -818,12 +832,12 @@ const BIOMES = [
       {m:'Eclipse',    armor:148, pick:54, sword:54, bow:37, tal:37, mpc:37},
       {m:'Seagrass',   armor:28,  pick:9,  sword:9,  bow:7,  tal:7,  mpc:7},
       {m:'Duneshard',  armor:148, pick:54, sword:54, bow:37, tal:37, mpc:37},
-      {m:'Space Poppy (Infused Space Mud)',             armor:7,  pick:3, sword:3, bow:2, tal:2, mpc:2, infused:true},
-      {m:'Space Warden Heart (Infused Meteorite)',      armor:8,  pick:3, sword:3, bow:2, tal:3, mpc:2, infused:true},
-      {m:'Space Lovers Tear (Infused Starwood)',        armor:7,  pick:3, sword:3, bow:2, tal:2, mpc:2, infused:true},
-      {m:'Space Icedrake (Infused Frostnova)',          armor:9,  pick:4, sword:4, bow:3, tal:3, mpc:3, infused:true},
-      {m:'Space Fire Core (Infused Astrorock)',         armor:9,  pick:4, sword:4, bow:3, tal:3, mpc:3, infused:true},
-      {m:'Space Abyss Core (Infused Eclipse)',          armor:10, pick:4, sword:4, bow:3, tal:3, mpc:3, infused:true},
+      {m:'Space Poppy (Infused Space Mud)',             armor:100, pick:36, sword:36, bow:25, tal:25, mpc:25, infused:true, infusedMaterial:'Infused Space Mud'},
+      {m:'Space Warden Heart (Infused Meteorite)',      armor:44,  pick:15, sword:15, bow:11, tal:13, mpc:11, infused:true, infusedMaterial:'Infused Meteorite'},
+      {m:'Space Lovers Tear (Infused Starwood)',        armor:28,  pick:9,  sword:9,  bow:7,  tal:7,  mpc:7,  infused:true, infusedMaterial:'Infused Starwood'},
+      {m:'Space Icedrake (Infused Frostnova)',          armor:140, pick:51, sword:51, bow:35, tal:35, mpc:35, infused:true, infusedMaterial:'Infused Frostnova'},
+      {m:'Space Fire Core (Infused Astrorock)',         armor:140, pick:51, sword:51, bow:35, tal:35, mpc:35, infused:true, infusedMaterial:'Infused Astrorock'},
+      {m:'Space Abyss Core (Infused Eclipse)',          armor:148, pick:54, sword:54, bow:37, tal:37, mpc:37, infused:true, infusedMaterial:'Infused Eclipse'},
     ]
   },
   { id:'magicworld', name:'Magic World', emoji:'🍄',
@@ -840,11 +854,13 @@ const BIOMES = [
 ];
 
 
-// gt (grand total) and tc (world-head total) are derived from the base values,
-// computed once here so they can never drift out of sync with the data above.
+// gt (grand total) and tc (world-head total) are derived from raw material values,
+// then converted once for infused boss drops so they cannot drift out of sync.
 BIOMES.forEach(b => b.items.forEach(it => {
-  it.tc = (it.mpc || 0) * 8;
-  it.gt = (it.armor||0)+(it.pick||0)+(it.sword||0)+(it.bow||0)+(it.tal||0) + it.tc;
+  const headMaterialTotal = (it.mpc || 0) * 8;
+  const gearMaterialTotal = (it.armor||0)+(it.pick||0)+(it.sword||0)+(it.bow||0)+(it.tal||0);
+  it.tc = getDisplayRequired(it, headMaterialTotal);
+  it.gt = getDisplayRequired(it, gearMaterialTotal + headMaterialTotal);
 }));
 
 const GEAR = [
@@ -856,6 +872,24 @@ const GEAR = [
 ];
 const GEAR_BY_KEY = Object.fromEntries(GEAR.map(g => [g.key, g]));
 const STACK = 64;
+
+function getInfusedDropYield(item) {
+  return item.infusedMaterial ? INFUSED_MATERIAL_DROP_YIELDS[item.infusedMaterial] : null;
+}
+
+function getDisplayRequired(item, totalRequired) {
+  const dropYield = getInfusedDropYield(item);
+  return dropYield ? getBossDropsRequired(totalRequired, dropYield) : totalRequired;
+}
+
+function getCardDisplayRequired(card, totalRequired) {
+  const dropYield = parseFloat(card.dataset.dropYield || 0);
+  return dropYield ? getBossDropsRequired(totalRequired, dropYield) : totalRequired;
+}
+
+function bossDropTitle(label, dropsRequired, materialRequired, infusedMaterial, dropYield) {
+  return `${label}: ${fmtNum(dropsRequired)} boss drops (${fmtNum(materialRequired)} ${infusedMaterial}, ${dropYield} per drop)`;
+}
 
 function fmtNum(n) {
   if (n == null) return '—';
@@ -910,29 +944,42 @@ BIOMES.forEach(b => {
     card.className = 'mat-card';
     card.dataset.material = item.m.toLowerCase();
     GEAR.forEach(g => card.dataset[g.key] = item[g.key] || 0);
+    const dropYield = getInfusedDropYield(item);
+    if (dropYield) {
+      card.dataset.dropYield = dropYield;
+      card.dataset.infusedMaterial = item.infusedMaterial;
+    }
 
     const gearSum = GEAR.reduce((s, g) => s + (item[g.key] || 0), 0);
     card.dataset.gearSum = gearSum;
 
     const cells = GEAR.map(g => {
-      const v = item[g.key];
-      const zero = !v;
-      return `<div class="gear-cell${zero?' zero':''}" data-type="${g.key}" title="${g.label}: ${fmtNum(v||0)}">
+      const rawValue = item[g.key] || 0;
+      const displayValue = getDisplayRequired(item, rawValue);
+      const zero = !rawValue;
+      const title = dropYield
+        ? bossDropTitle(g.label, displayValue, rawValue, item.infusedMaterial, dropYield)
+        : `${g.label}: ${fmtNum(rawValue)}`;
+      return `<div class="gear-cell${zero?' zero':''}" data-type="${g.key}" title="${title}">
         <span class="gico">${g.icon}</span>
-        <span class="gval">${zero ? '—' : fmtNum(v)}</span>
+        <span class="gval">${zero ? '—' : fmtNum(displayValue)}</span>
       </div>`;
     }).join('');
 
     // Pre-render each gear's focus block; we'll switch which is visible.
     const focusBlocks = GEAR.map(g => {
-      const v = item[g.key] || 0;
-      return `<div class="gear-focus" data-focus="${g.key}">
+      const rawValue = item[g.key] || 0;
+      const displayValue = getDisplayRequired(item, rawValue);
+      const title = dropYield
+        ? bossDropTitle(g.label, displayValue, rawValue, item.infusedMaterial, dropYield)
+        : `${g.label}: ${fmtNum(rawValue)}`;
+      return `<div class="gear-focus" data-focus="${g.key}" title="${title}">
         <div class="focus-row">
           <div>
             <div class="focus-label">${g.icon} ${g.label} needs</div>
-            <div class="focus-stacks">≈ <strong>${stackStr(v)}</strong> ${v ? '' : '<em style="color:#888">— not used</em>'}</div>
+            <div class="focus-stacks">≈ <strong>${stackStr(displayValue)}</strong> ${rawValue ? '' : '<em style="color:#888">— not used</em>'}</div>
           </div>
-          <div class="focus-val">${fmtNum(v)}</div>
+          <div class="focus-val">${fmtNum(displayValue)}</div>
         </div>
       </div>`;
     }).join('');
@@ -940,10 +987,14 @@ BIOMES.forEach(b => {
     let whHtml = '';
     if (item.mpc != null && item.mpc !== 0) {
       card.dataset.mpc = item.mpc;
+      const perHeadDisplay = getDisplayRequired(item, item.mpc);
+      const perHeadTitle = dropYield
+        ? bossDropTitle('World Head', perHeadDisplay, item.mpc, item.infusedMaterial, dropYield)
+        : `World Head: ${fmtNum(item.mpc)}`;
       whHtml = `
         <div class="wh-block">
           <div class="wh-block-label">🪵 World Head</div>
-          <div class="wh-row" data-wh-per-head><span>per head</span><strong>${fmtNum(item.mpc)}</strong></div>
+          <div class="wh-row" data-wh-per-head title="${perHeadTitle}"><span>per head</span><strong>${fmtNum(perHeadDisplay)}</strong></div>
           <div class="wh-row" data-wh-total-row><span><span data-wh-count-label>—</span> heads</span><strong data-wh-total>—</strong></div>
           <div class="wh-row" data-wh-stacks-row><span>≈ stacks</span><strong data-wh-stacks>—</strong></div>
         </div>`;
@@ -998,7 +1049,8 @@ function updateCardTotal(card) {
   const gearSum = effectiveGearSum(card);
 
   if (mpc) {
-    const whTotal = mpc * whCount;
+    const whMaterialTotal = mpc * whCount;
+    const whTotal = getCardDisplayRequired(card, whMaterialTotal);
     const whTotalEl = card.querySelector('[data-wh-total]');
     const whStackEl = card.querySelector('[data-wh-stacks]');
     if (whTotalEl) whTotalEl.textContent = fmtNum(whTotal);
@@ -1007,17 +1059,37 @@ function updateCardTotal(card) {
 
     const totalRow  = card.querySelector('[data-wh-total-row]');
     const stacksRow = card.querySelector('[data-wh-stacks-row]');
+    const dropYield = parseFloat(card.dataset.dropYield || 0);
+    const whTitle = dropYield
+      ? bossDropTitle(`${whCount} heads`, whTotal, whMaterialTotal, card.dataset.infusedMaterial, dropYield)
+      : '';
+    if (dropYield && totalRow) {
+      totalRow.title = whTitle;
+    }
+    if (dropYield && stacksRow) {
+      stacksRow.title = whTitle;
+    }
     if (totalRow)  totalRow.style.display  = whCount === 1 ? 'none' : '';
     if (stacksRow) stacksRow.style.display = whTotal >= 64 ? '' : 'none';
   }
 
-  const grandTotal = gearSum + mpc * whCount;
+  const materialTotal = gearSum + mpc * whCount;
+  const grandTotal = getCardDisplayRequired(card, materialTotal);
   const totalValEl = card.querySelector('[data-total-val]');
   const totalStackEl = card.querySelector('[data-total-stacks]');
   const totalBigEl = card.querySelector('[data-total-big]');
+  const totalLineEl = card.querySelector('.total-line');
   if (totalValEl) totalValEl.textContent = fmtNum(grandTotal);
   if (totalStackEl) totalStackEl.textContent = stackStr(grandTotal);
-  if (totalBigEl) totalBigEl.classList.toggle('big', grandTotal >= 500);
+  const dropYield = parseFloat(card.dataset.dropYield || 0);
+  const totalTitle = dropYield
+    ? bossDropTitle('Total', grandTotal, materialTotal, card.dataset.infusedMaterial, dropYield)
+    : `Total: ${fmtNum(grandTotal)}`;
+  if (totalBigEl) {
+    totalBigEl.classList.toggle('big', grandTotal >= 500);
+    totalBigEl.title = totalTitle;
+  }
+  if (totalLineEl) totalLineEl.title = totalTitle;
 }
 
 function updateWHTotals() {
