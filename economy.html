@@ -768,8 +768,8 @@
             </div>
             <div class="preset-row" role="group" aria-label="Date range presets">
               <button type="button" class="preset-btn" data-days="7">7d</button>
-              <button type="button" class="preset-btn active" data-days="30">30d</button>
-              <button type="button" class="preset-btn" data-days="90">90d</button>
+              <button type="button" class="preset-btn" data-days="30">30d</button>
+              <button type="button" class="preset-btn active" data-days="90">90d</button>
               <button type="button" class="preset-btn" data-days="all">All</button>
             </div>
             <label class="source-toggle" for="include-trades">
@@ -808,7 +808,7 @@
       </div>
 
       <div>
-        <h2 class="section-title">Median Price Over Time <small>Weekly buckets (Monday-aligned), full history</small></h2>
+        <h2 class="section-title">Median Price Over Time <small>Monthly buckets, full history</small></h2>
         <div class="chart-container">
           <div id="item-chart" class="chart-canvas"></div>
         </div>
@@ -826,8 +826,8 @@
     </div>
     <div class="preset-row" id="worlds-presets" role="group" aria-label="Prices-by-world range" style="margin: 0 0 12px;">
       <button type="button" class="preset-btn" data-worlds-days="7">7d</button>
-      <button type="button" class="preset-btn active" data-worlds-days="30">30d</button>
-      <button type="button" class="preset-btn" data-worlds-days="90">90d</button>
+      <button type="button" class="preset-btn" data-worlds-days="30">30d</button>
+      <button type="button" class="preset-btn active" data-worlds-days="90">90d</button>
       <button type="button" class="preset-btn" data-worlds-days="all">All</button>
     </div>
     <label class="source-toggle" for="worlds-include-trades" style="margin: 0 0 6px;">
@@ -1072,7 +1072,7 @@
           if (!params.length) return '';
           var p = params[0];
           var n = ns[p.dataIndex] || 0;
-          return 'Week of ' + p.axisValue + '<br/>Median: $' + fmtPpi(p.data)
+          return p.axisValue + '<br/>Median: $' + fmtPpi(p.data)
             + '<br/><span style="color:#888;font-size:11px;">' + n + ' sale' + (n === 1 ? '' : 's') + '</span>';
         }
       },
@@ -1159,7 +1159,7 @@
       return buckets;
     }
 
-    var currentDays = 30;
+    var currentDays = 90;
     function render(days) {
       if (days != null) currentDays = days;
       var includeTrades = document.getElementById('worlds-include-trades').checked;
@@ -1222,7 +1222,7 @@
     function updateWorldsUrl() {
       if (window.__urlUpdating) return;
       var params = new URLSearchParams(window.location.search);
-      if (currentDays && currentDays !== 30 && currentDays !== '30') {
+      if (currentDays && currentDays !== 90 && currentDays !== '90') {
         params.set('worlds', String(currentDays));
       } else {
         params.delete('worlds');
@@ -1427,28 +1427,24 @@
     };
   }
 
-  function weekStart(isoDateStr) {
-    var d = new Date(isoDateStr + 'T00:00:00');
-    var day = d.getDay();
-    var diff = day === 0 ? 6 : day - 1; // Monday = start of week
-    d.setDate(d.getDate() - diff);
-    var m = String(d.getMonth() + 1).padStart(2, '0');
-    var day2 = String(d.getDate()).padStart(2, '0');
-    return d.getFullYear() + '-' + m + '-' + day2;
+  var MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function monthLabel(isoDateStr) {
+    // 'YYYY-MM-DD' -> 'Sep 2026'
+    return MONTH_NAMES[Number(isoDateStr.slice(5, 7)) - 1] + ' ' + isoDateStr.slice(0, 4);
   }
 
-  function weeklyMedianSeries(sales) {
+  function monthlyMedianSeries(sales) {
     var grouped = {};
     sales.forEach(function(s) {
-      var wk = weekStart(s.d);
-      (grouped[wk] = grouped[wk] || []).push(s.ppi);
+      var mo = s.d.slice(0, 7);
+      (grouped[mo] = grouped[mo] || []).push(s.ppi);
     });
     var keys = Object.keys(grouped).sort();
-    var points = keys.map(function(wk) {
-      var arr = grouped[wk].slice().sort(function(a, b) { return a - b; });
-      return { date: wk, median: median(arr), n: arr.length };
+    var points = keys.map(function(mo) {
+      var arr = grouped[mo].slice().sort(function(a, b) { return a - b; });
+      return { date: monthLabel(mo + '-01'), median: median(arr), n: arr.length };
     });
-    // Drop weeks with a single sample, which produce spikes. Only keep this
+    // Drop months with a single sample, which produce spikes. Only keep this
     // filter if it leaves enough points to form a chart.
     var filtered = points.filter(function(p) { return p.n >= 2; });
     return filtered.length >= 3 ? filtered : points;
@@ -1529,7 +1525,7 @@
       resetStats();
     }
     var allSales = filterSales(item, '', '', includeTrades, includeOrders);
-    var series = weeklyMedianSeries(allSales);
+    var series = monthlyMedianSeries(allSales);
     if (series.length) {
       renderItemChart(series);
     } else {
@@ -1643,7 +1639,7 @@
       if (end) endEl.value = end;
       clearPresetActive();
     } else {
-      applyPreset(30);
+      applyPreset(90);
     }
     updatingUrl = false;
   }
