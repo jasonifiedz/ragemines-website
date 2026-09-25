@@ -779,6 +779,13 @@
                 <small>Only clean item-for-currency trades are counted.</small>
               </span>
             </label>
+            <label class="source-toggle" for="include-orders">
+              <input id="include-orders" type="checkbox">
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+              <span class="toggle-text">Include buy orders (<code>/order</code>)
+                <small>Filled orders, priced at the order's price per item.</small>
+              </span>
+            </label>
           </form>
         </div>
 
@@ -797,7 +804,7 @@
             <div class="widget"><h3>Q3 Price</h3><p class="value" id="sum-q3">-</p></div>
           </div>
         </div>
-        <p class="empty-note" id="summary-empty">No sales in the selected range. Try a wider window or toggle player trades.</p>
+        <p class="empty-note" id="summary-empty">No sales in the selected range. Try a wider window or toggle player trades / orders.</p>
       </div>
 
       <div>
@@ -823,11 +830,18 @@
       <button type="button" class="preset-btn" data-worlds-days="90">90d</button>
       <button type="button" class="preset-btn" data-worlds-days="all">All</button>
     </div>
-    <label class="source-toggle" for="worlds-include-trades" style="margin: 0 0 18px;">
+    <label class="source-toggle" for="worlds-include-trades" style="margin: 0 0 6px;">
       <input id="worlds-include-trades" type="checkbox">
       <span class="toggle-track"><span class="toggle-thumb"></span></span>
       <span class="toggle-text">Include player trades (<code>/trade</code>)
-        <small>Default: AH + orders only. Matches Item Trend.</small>
+        <small>Default: AH only. Matches Item Trend.</small>
+      </span>
+    </label>
+    <label class="source-toggle" for="worlds-include-orders" style="margin: 0 0 18px;">
+      <input id="worlds-include-orders" type="checkbox">
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      <span class="toggle-text">Include buy orders (<code>/order</code>)
+        <small>Filled orders, priced at the order's price per item.</small>
       </span>
     </label>
     <div id="worlds-grid" class="worlds-grid"></div>
@@ -1105,7 +1119,7 @@
         : sorted[base];
     }
 
-    function computeWorldStats(days, includeTrades) {
+    function computeWorldStats(days, includeTrades, includeOrders) {
       var minDate = null;
       if (days !== 'all' && data.generated_at) {
         var end = new Date(data.generated_at + 'T00:00:00');
@@ -1122,6 +1136,7 @@
         for (var i = 0; i < it.sales.length; i++) {
           var s = it.sales[i];
           if (!includeTrades && s.s === 'trade') continue;
+          if (!includeOrders && s.s === 'order') continue;
           if (minDate && s.d < minDate) continue;
           ppis.push(s.ppi);
           vol += s.a;
@@ -1148,7 +1163,8 @@
     function render(days) {
       if (days != null) currentDays = days;
       var includeTrades = document.getElementById('worlds-include-trades').checked;
-      var buckets = computeWorldStats(currentDays, includeTrades);
+      var includeOrders = document.getElementById('worlds-include-orders').checked;
+      var buckets = computeWorldStats(currentDays, includeTrades, includeOrders);
       var html = worldOrder.filter(function (w) { return buckets[w] && buckets[w].length; }).map(function (w) {
         var rows = buckets[w].map(function (it) {
           return '<tr data-name="' + escHtml(it.name.toLowerCase()) + '">'
@@ -1196,9 +1212,11 @@
     });
 
     document.getElementById('world-search').addEventListener('input', applySearch);
-    document.getElementById('worlds-include-trades').addEventListener('change', function() {
-      updateWorldsUrl();
-      render();
+    ['worlds-include-trades', 'worlds-include-orders'].forEach(function(id) {
+      document.getElementById(id).addEventListener('change', function() {
+        updateWorldsUrl();
+        render();
+      });
     });
 
     function updateWorldsUrl() {
@@ -1213,6 +1231,11 @@
         params.set('wtrades', '1');
       } else {
         params.delete('wtrades');
+      }
+      if (document.getElementById('worlds-include-orders').checked) {
+        params.set('worders', '1');
+      } else {
+        params.delete('worders');
       }
       var q = params.toString();
       history.replaceState(null, '', window.location.pathname + (q ? '?' + q : '') + window.location.hash);
@@ -1231,6 +1254,9 @@
     }
     if (urlParams.get('wtrades') === '1') {
       document.getElementById('worlds-include-trades').checked = true;
+    }
+    if (urlParams.get('worders') === '1') {
+      document.getElementById('worlds-include-orders').checked = true;
     }
 
     render();
@@ -1363,10 +1389,11 @@
   }
   function median(arr) { return quantile(arr, 0.5); }
 
-  function filterSales(item, startDate, endDate, includeTrades) {
+  function filterSales(item, startDate, endDate, includeTrades, includeOrders) {
     if (!item) return [];
     return item.sales.filter(function(s) {
       if (!includeTrades && s.s === 'trade') return false;
+      if (!includeOrders && s.s === 'order') return false;
       if (startDate && s.d < startDate) return false;
       if (endDate && s.d > endDate) return false;
       return true;
@@ -1440,7 +1467,7 @@
     var note = document.getElementById('summary-empty');
     if (show) {
       grid.style.display = 'none';
-      note.textContent = message || 'No sales in the selected range. Try a wider window or toggle player trades.';
+      note.textContent = message || 'No sales in the selected range. Try a wider window or toggle player trades / orders.';
       note.classList.add('visible');
     } else {
       grid.style.display = '';
@@ -1480,6 +1507,7 @@
     var start = document.getElementById('start-date').value;
     var end = document.getElementById('end-date').value;
     var includeTrades = document.getElementById('include-trades').checked;
+    var includeOrders = document.getElementById('include-orders').checked;
     updateClearButton();
     if (!item) {
       if (name) {
@@ -1492,7 +1520,7 @@
       updateUrl();
       return;
     }
-    var sales = filterSales(item, start, end, includeTrades);
+    var sales = filterSales(item, start, end, includeTrades, includeOrders);
     if (sales.length) {
       setEmpty(false);
       renderStats(computeStats(sales));
@@ -1500,7 +1528,7 @@
       setEmpty(true);
       resetStats();
     }
-    var allSales = filterSales(item, '', '', includeTrades);
+    var allSales = filterSales(item, '', '', includeTrades, includeOrders);
     var series = weeklyMedianSeries(allSales);
     if (series.length) {
       renderItemChart(series);
@@ -1514,6 +1542,7 @@
     e.preventDefault(); runLookup();
   });
   document.getElementById('include-trades').addEventListener('change', runLookup);
+  document.getElementById('include-orders').addEventListener('change', runLookup);
   document.getElementById('start-date').addEventListener('change', runLookup);
   document.getElementById('end-date').addEventListener('change', runLookup);
   input.addEventListener('change', runLookup);
@@ -1577,6 +1606,8 @@
     if (endEl.value) params.set('end', endEl.value); else params.delete('end');
     if (document.getElementById('include-trades').checked) params.set('trades', '1');
     else params.delete('trades');
+    if (document.getElementById('include-orders').checked) params.set('orders', '1');
+    else params.delete('orders');
     var q = params.toString();
     var url = window.location.pathname + (q ? '?' + q : '') + window.location.hash;
     history.replaceState(null, '', url);
@@ -1588,11 +1619,12 @@
     var start = params.get('start');
     var end = params.get('end');
     var trades = params.get('trades');
+    var orders = params.get('orders');
     updatingUrl = true;
-    if (item || start || end || trades) {
+    if (item || start || end || trades || orders) {
       var trendBtn = document.querySelector('.tab-button[data-tab="item"]');
       if (trendBtn) trendBtn.click();
-    } else if (params.get('worlds') || params.get('wtrades')) {
+    } else if (params.get('worlds') || params.get('wtrades') || params.get('worders')) {
       var worldsBtn = document.querySelector('.tab-button[data-tab="worlds"]');
       if (worldsBtn) worldsBtn.click();
     }
@@ -1602,6 +1634,9 @@
     }
     if (trades === '1') {
       document.getElementById('include-trades').checked = true;
+    }
+    if (orders === '1') {
+      document.getElementById('include-orders').checked = true;
     }
     if (start || end) {
       if (start) startEl.value = start;
